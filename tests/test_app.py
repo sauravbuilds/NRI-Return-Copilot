@@ -11,7 +11,8 @@ from copilot.schemas import (Answer, Citation, CommunityFinding, CommunityLink, 
 
 APP = str(Path(__file__).resolve().parent.parent / "app.py")
 CITE = Citation(document_title="Doc One", issuer="RBI", page=2, doc_id="d1",
-                page_url="https://x.org/d1.pdf#page=2", last_verified="2026-11-01", published="2015-07-01")
+                page_url="https://x.org/d1.pdf#page=2", last_verified="2026-11-01", published="2015-07-01",
+                quote="the exact words")
 
 
 @pytest.fixture(autouse=True)
@@ -63,6 +64,13 @@ def test_an_abstained_answer_still_shows_community_discussions_and_us_sources(mo
     text = " ".join(m.value for m in at.markdown)
     assert "[Moving my 401k](https://reddit.com/r/nri/1) on reddit.com" in text
     assert "[IRS page (IRS)](https://irs.gov/x)" in text and "Official sources for the US side" in text
+
+
+def test_each_source_shows_its_exact_quote_document_authority_and_page(monkeypatch):
+    text = " ".join(m.value for m in run_direct(monkeypatch, canned()).markdown)
+    assert "*“the exact words”*" in text
+    assert "Source: Doc One (RBI), released 1 July 2015, page 2" in text
+    assert "What this means for you" in text
 
 
 def test_four_sections_in_order_with_separate_community_tier(monkeypatch):
@@ -142,7 +150,7 @@ def test_abstention_message_and_brief_download(monkeypatch):
 
 def prepared_item():
     from copilot.prepared import PreparedAnswer
-    return PreparedAnswer("q1", "What happens to my NRO account?", canned().answer, "2026-11-02")
+    return PreparedAnswer("q1", "What happens to my NRO account?", canned().answer, "2026-11-02", "nro account return")
 
 
 def test_common_questions_open_a_prepared_answer_without_running_the_pipeline(monkeypatch):
@@ -198,7 +206,7 @@ def test_a_prepared_question_is_searched_once_for_all_visitors(monkeypatch):
     at = AppTest.from_file(APP, default_timeout=30).run()
     at.sidebar.button[0].click().run()
     at.sidebar.button[0].click().run()
-    assert len(searches) == 1
+    assert searches == ["nro account return"]  # the prepared search, not the question text, and only once
 
 
 def test_no_common_questions_means_no_sidebar_list(monkeypatch):

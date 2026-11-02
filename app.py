@@ -19,7 +19,7 @@ from copilot.persona import (ACCOUNT_OPTIONS, ASSET_OPTIONS, CITIZENSHIP_OPTIONS
 from copilot.schemas import DISCLAIMER, Persona
 from copilot.tools import fetch_community, site_of
 from scripts.ingest import build_index
-from copilot.sources import describe_citation, footer_lines, pretty_date
+from copilot.sources import describe_sources, footer_lines, pretty_date
 
 PRIVACY = ("Just share the context. Please don't type phone numbers, ID numbers or account numbers, "
            "and don't upload documents.")
@@ -108,6 +108,7 @@ def render_result(result) -> None:
         if ans.official_updates:
             render_updates(ans.official_updates)
         st.subheader("1. Your roadmap")
+        st.markdown("**What this means for you**")
         st.write(ans.summary)
         st.caption(f"Confidence: {ans.confidence}. {ans.confidence_reason}")
         for stage, title in STAGE_TITLES.items():
@@ -115,11 +116,11 @@ def render_result(result) -> None:
             if steps:
                 st.markdown(f"**{title}**")
                 for s in steps:
-                    st.markdown(f"- {s.step}  \n  Source: " + "; ".join(describe_citation(c) for c in s.citations))
+                    st.markdown(f"- {s.step}  \n  {describe_sources(s.citations)}")
         if ans.official_findings:
             st.markdown("**What the official documents say**")
             for f in ans.official_findings:
-                st.markdown(f"- {f.statement}  \n  Source: " + "; ".join(describe_citation(c) for c in f.citations))
+                st.markdown(f"- {f.statement}  \n  {describe_sources(f.citations)}")
 
         st.subheader("2. What I could not determine")
         if ans.missing_information:
@@ -293,7 +294,8 @@ def common_questions_sidebar() -> None:
         for item in items:
             if st.button(item.question, key=f"prepared_{item.id}", use_container_width=True):
                 answer = item.answer
-                threads = live_discussions(item.question)
+                with st.spinner("Getting the answer and fresh community discussions. This might take a few moments."):
+                    threads = live_discussions(item.community_query or item.question)
                 if threads:  # fresh discussions replace the ones saved with the answer
                     answer = answer.model_copy(update={"community_findings": [],
                                                        "community_links": orchestrator.as_links(threads)})

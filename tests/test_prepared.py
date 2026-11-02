@@ -16,7 +16,7 @@ def manifest(tmp_path, sha="aaa"):
 
 
 def entry():
-    return {"id": "q1", "question": "What happens to my NRO account?",
+    return {"id": "q1", "question": "What happens to my NRO account?", "community_query": "nro account return",
             "answer": Answer(summary="Plain answer.").model_dump(mode="json")}
 
 
@@ -44,27 +44,6 @@ def test_a_missing_or_damaged_file_means_no_prepared_answers(tmp_path):
 
 def test_the_fingerprint_changes_with_any_document_hash(tmp_path):
     assert prepared.documents_fingerprint(manifest(tmp_path, "a")) != prepared.documents_fingerprint(manifest(tmp_path, "b"))
-
-
-def result(kind="answered", confidence="high", findings=1, steps=2):
-    from types import SimpleNamespace
-    from copilot.schemas import Citation, Finding, RoadmapStep
-    cite = Citation(document_title="D", issuer="RBI", page=1, doc_id="d", page_url="http://x#page=1", last_verified="")
-    answer = Answer(summary="s", confidence=confidence,
-                    official_findings=[Finding(statement="f", citations=[cite])] * findings,
-                    roadmap=[RoadmapStep(stage="first_year", step="s", citations=[cite])] * steps)
-    return SimpleNamespace(kind=kind, answer=answer)
-
-
-def test_only_full_sourced_answers_with_reasonable_confidence_are_kept():
-    assert prepared.good_enough(result())
-    assert prepared.good_enough(result(confidence="medium"))
-    assert not prepared.good_enough(result(confidence="low"))
-    assert not prepared.good_enough(result(kind="abstained"))
-    assert prepared.good_enough(result(findings=2, steps=0))   # a definition: findings, no steps
-    assert prepared.good_enough(result(findings=0, steps=2))
-    assert not prepared.good_enough(result(findings=1, steps=0))  # too little to keep
-    assert not prepared.good_enough(result(findings=0, steps=1))
 
 
 def test_common_questions_file_is_well_formed():

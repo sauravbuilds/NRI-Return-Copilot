@@ -1,9 +1,9 @@
 """Prepared answers for common questions.
 
-Each answer is produced by the real pipeline from the official documents and stored together
-with a fingerprint of the documents it was built from. When any document changes, the stored
-answers no longer match and are ignored, so the app answers live again until they are
-prepared afresh.
+Each answer is written from the official documents and checked against them (see
+curation.py), then stored with a fingerprint of the documents it was built from. When any
+document changes, the stored answers no longer match and are ignored, so the app answers live
+again until they are rebuilt and re-checked.
 """
 import csv
 import hashlib
@@ -25,17 +25,7 @@ class PreparedAnswer:
     question: str
     answer: Answer
     prepared_on: str
-
-
-MIN_CITED_ITEMS = 2  # findings plus roadmap steps; each one carries a citation
-
-
-def good_enough(result) -> bool:
-    """Only a sourced answer with reasonable confidence and some substance is worth keeping.
-    A definition ("What is Schedule FA?") may be all findings and no steps, so either counts."""
-    answer = result.answer
-    return bool(result.kind == "answered" and answer and answer.confidence != "low"
-                and len(answer.official_findings) + len(answer.roadmap) >= MIN_CITED_ITEMS)
+    community_query: str = ""  # the search prepared for this question
 
 
 def documents_fingerprint(manifest_path=None) -> str:
@@ -46,7 +36,7 @@ def documents_fingerprint(manifest_path=None) -> str:
 
 
 def save(entries: list[dict], path=None, manifest_path=None, today: str | None = None) -> None:
-    """entries: [{"id", "question", "answer": Answer as JSON-ready dict}]."""
+    """entries: [{"id", "question", "community_query", "answer": Answer as JSON-ready dict}]."""
     payload = {"documents": documents_fingerprint(manifest_path),
                "prepared_on": today or date.today().isoformat(), "answers": entries}
     Path(path or PREPARED_PATH).write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
@@ -62,7 +52,8 @@ def available(path=None, manifest_path=None) -> list[PreparedAnswer]:
         payload = json.loads(path.read_text(encoding="utf-8"))
         if payload["documents"] != documents_fingerprint(manifest_path):
             return []
-        return [PreparedAnswer(e["id"], e["question"], Answer.model_validate(e["answer"]), payload["prepared_on"])
+        return [PreparedAnswer(e["id"], e["question"], Answer.model_validate(e["answer"]), payload["prepared_on"],
+                               e.get("community_query", ""))
                 for e in payload["answers"]]
     except (KeyError, ValueError, OSError):
         return []

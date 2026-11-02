@@ -49,6 +49,7 @@ class Citation(BaseModel):
     last_verified: str
     doc_id: str = ""
     published: str = ""  # release date of the document (ISO), empty when unknown
+    quote: str = ""  # the exact words on that page that support the statement, when known
 
     def model_post_init(self, _ctx) -> None:
         if not self.page_url.endswith(f"#page={self.page}"):

@@ -15,7 +15,7 @@ NRI Return Copilot builds a profile from a short intake, searches the official d
 ## Features
 
 - **Two ways in.** A guided intake of nine questions, or a free-text question. Every multiple-choice question has a box for anything the options do not cover, and what is written there is interpreted and used.
-- **Common questions.** A sidebar lists questions many returning NRIs ask. Each has an answer prepared from the official documents, so it opens at once and uses no model calls. The community discussions beside it are searched live, once a day per question. Prepared answers are ignored automatically once any document changes.
+- **Common questions.** A sidebar lists 20 questions that returning NRIs ask. Each answer is written from the official documents and shows the exact quote, the document, the authority that issued it, its release date and the page. Answers open at once and use no model calls. Each question has a prepared search for community discussions, run live and shared for a day. Answers are ignored automatically once any document changes.
 - **Cited roadmap.** Each step shows the document, its release date (where known) and the page, with links to that page and the full document.
 - **Newer circulars.** A search of the RBI and Income Tax sites flags publications dated after the last document update.
 - **Community tier.** Linked Reddit, X and Quora threads, each labelled as agreeing with, contradicting or unrelated to the official text.
@@ -138,7 +138,7 @@ app.py          Streamlit app
 config.py       settings and thresholds
 copilot/        pipeline, retrieval, tools, prompts, model calls
 guardrails/     PII, scope, grounding, escalation, output checks
-scripts/        ingest, refresh, prepare_answers, check_llm, score_report
+scripts/        ingest, refresh, build_prepared_answers, check_llm, score_report
 analytics/      community thread collection, tagging and charts
 evals/          golden set, runner, tuning
 data/official/  source PDFs and manifest.csv
@@ -159,7 +159,7 @@ The evaluation reports retrieval hit rate, unsupported-claim rate, refusal accur
 
 `python scripts/refresh.py` re-downloads every document in `data/official/manifest.csv`, compares SHA-256 hashes, archives changed files and rebuilds the index. A failed download never removes the existing file. A GitHub Action runs the refresh every three days.
 
-`python scripts/prepare_answers.py` prepares the answers for the common questions in `data/common_questions.json` using the normal pipeline. Run it again after a refresh.
+`python scripts/build_prepared_answers.py` rebuilds the common-question answers from `data/curated_answers.json`. It checks that every quote is on its page of the downloaded PDF and stops at any quote it cannot find, so run it after a refresh.
 
 Downloads use a Scrapy crawler (`scripts/crawler.py`) that identifies itself as `NRIReturnCopilot-refresh`, obeys `robots.txt`, makes one request at a time per site with a delay, and retries transient errors. Only responses that are PDFs are accepted.
 

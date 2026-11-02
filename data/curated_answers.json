@@ -1,0 +1,471 @@
+[
+  {
+    "id": "nre-on-return",
+    "summary": "When you come back to take up a job, your NRE account should be changed. The RBI says you can either redesignate it as a resident account or move the money into a Resident Foreign Currency (RFC) account, and it is your choice. This is meant to happen as soon as you return.",
+    "findings": [
+      {"statement": "RBI says NRE accounts should be redesignated as resident accounts, or the money moved to an RFC account, at your option, when you return to India for a job or your residential status changes.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 4, "quote": "NRE accounts should be designated as resident accounts or the funds held in these accounts may be transferred to the RFC accounts, at the option of the account holder"}]},
+      {"statement": "An RFC account can receive balances from NRE and FCNR(B) accounts when your residential status changes.",
+       "citations": [{"doc_id": "rbi_faq_fc_accounts_resident", "page": 3, "quote": "Balances in NRE/ FCNR (B) accounts on change in residential status"}]}
+    ],
+    "roadmap": [
+      {"stage": "before_you_move", "step": "Ask your bank how it handles the change for NRE accounts, and decide whether you want a resident rupee account or an RFC account.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 4, "quote": "NRE accounts should be designated as resident accounts or the funds held in these accounts may be transferred to the RFC accounts"}]},
+      {"stage": "first_30_days", "step": "Tell your bank as soon as you return, so the NRE account is redesignated or the money is moved to an RFC account.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 4, "quote": "immediately upon the return of the account holder to India for taking up employment or on change in the residential status"}]}
+    ],
+    "missing_information": [
+      {"field": "relocation_status", "why_it_matters": "The change applies once you have returned or your residential status has changed.", "if_this_then_that": "If you are still planning the move, you can prepare now and act when you arrive."},
+      {"field": "move_date", "why_it_matters": "The rule says the change should happen immediately on return.", "if_this_then_that": "With your return date you know when to contact the bank."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "The RBI FAQ (as on 16 January 2025) states this directly for people returning to take up employment or whose residential status changes."
+  },
+  {
+    "id": "fcnr-after-return",
+    "summary": "You do not have to break your FCNR(B) deposit when you become a resident. The RBI says it may continue until maturity at the rate you contracted. At maturity, the bank converts it into a resident rupee deposit or an RFC account, whichever you choose.",
+    "findings": [
+      {"statement": "On a change in residential status, an FCNR(B) deposit may be allowed to continue until maturity at the contracted rate of interest, if you want that.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 4, "quote": "FCNR (B) deposits may be allowed to continue till maturity at the contracted rate of interest, if so desired by the account holder"}]},
+      {"statement": "At maturity, banks should convert the deposit into a resident rupee deposit account or an RFC account (if you are eligible for one), at your option.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 4, "quote": "convert the FCNR(B) deposits on maturity into resident rupee deposit accounts or RFC account (if the depositor is eligible to open RFC account), at the option of the account holder"}]}
+    ],
+    "roadmap": [
+      {"stage": "first_30_days", "step": "Tell your bank you want the FCNR(B) deposit to run until it matures.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 4, "quote": "FCNR (B) deposits may be allowed to continue till maturity at the contracted rate of interest"}]},
+      {"stage": "first_year", "step": "Before the deposit matures, decide whether you want it converted into a resident rupee deposit or an RFC account.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 4, "quote": "resident rupee deposit accounts or RFC account (if the depositor is eligible to open RFC account), at the option of the account holder"}]}
+    ],
+    "missing_information": [
+      {"field": "relocation_status", "why_it_matters": "The rule applies once your residential status has changed.", "if_this_then_that": "If you have not returned yet, nothing changes for the deposit until you do."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "The RBI FAQ (as on 16 January 2025) states this directly."
+  },
+  {
+    "id": "nro-to-resident",
+    "summary": "Yes. The RBI says an NRO account may be designated as a resident account when you return to India for any purpose that shows you intend to stay for an uncertain period.",
+    "findings": [
+      {"statement": "NRO accounts may be designated as resident accounts when the holder returns to India for any purpose that indicates an intention to stay for an uncertain period.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 4, "quote": "NRO accounts may be designated as resident accounts on the return of the account holder to India for any purpose indicating his intention to stay in India for an uncertain period"}]},
+      {"statement": "The reverse also applies: when a resident Indian becomes a person resident outside India, the existing resident account should be designated as an NRO account.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 4, "quote": "his existing resident account should be designated as NRO account"}]}
+    ],
+    "roadmap": [
+      {"stage": "first_30_days", "step": "Once you have returned to stay, ask your bank to redesignate your NRO account as a resident account.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 4, "quote": "NRO accounts may be designated as resident accounts on the return of the account holder to India"}]}
+    ],
+    "missing_information": [
+      {"field": "relocation_status", "why_it_matters": "The account can be redesignated once you have returned to stay.", "if_this_then_that": "If you are still abroad, it remains an NRO account."},
+      {"field": "move_date", "why_it_matters": "It tells you when to ask the bank.", "if_this_then_that": "With a date, you can plan the request for your first weeks back."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "The RBI FAQ (as on 16 January 2025) states this directly."
+  },
+  {
+    "id": "nro-yearly-limit",
+    "summary": "NRO balances are normally not repatriable, except current income. NRIs and PIOs can send up to USD 1 million per financial year (April to March) out of NRO balances, together with their other eligible assets, under the 2016 remittance regulations. This applies while you are an NRI or PIO.",
+    "findings": [
+      {"statement": "Balances in an NRO account of NRIs and PIOs can be remitted up to USD 1 million per financial year (April to March), along with their other eligible assets.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 3, "quote": "Balances in an NRO account of NRIs/ PIOs are remittable up to USD 1 (one) million per financial year (April -March) along with their other eligible assets"}]},
+      {"statement": "The conditions are in the Foreign Exchange Management (Remittance of Assets) Regulations, 2016.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 3, "quote": "subject to conditions specified in Foreign Exchange Management (Remittance of Assets) Regulations, 2016"}]},
+      {"statement": "Funds can also be moved to an NRE account within this USD 1 million facility.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 3, "quote": "Funds can be transferred to NRE account within this USD 1 Million facility"}]}
+    ],
+    "roadmap": [
+      {"stage": "before_you_move", "step": "If you want to send NRO money abroad while you are still an NRI or PIO, check the remittance regulations with your bank, because the limit comes with conditions.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 3, "quote": "subject to conditions specified in Foreign Exchange Management (Remittance of Assets) Regulations, 2016"}]}
+    ],
+    "missing_information": [
+      {"field": "relocation_status", "why_it_matters": "The USD 1 million facility is described for NRIs and PIOs.", "if_this_then_that": "Once you are a resident, the NRO account is redesignated and different remittance rules apply."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "The RBI FAQ (as on 16 January 2025) states the limit directly. The detailed conditions are in the 2016 regulations, which are not in our documents."
+  },
+  {
+    "id": "nre-nro-fcnr",
+    "summary": "NRE is a rupee account for money coming in from abroad, and it is repatriable. FCNR(B) is a term deposit held in a freely convertible foreign currency. NRO is a rupee account that is not repatriable except for current income, plus the USD 1 million yearly facility for NRIs and PIOs.",
+    "findings": [
+      {"statement": "NRE accounts can be savings, current, recurring or fixed deposit accounts, and money comes in mainly as inward remittances and interest.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 2, "quote": "Credits permitted to this account are inward remittance from outside India, interest accruing on the account"}]},
+      {"statement": "FCNR(B) is a term deposit scheme in any permitted currency, meaning a freely convertible foreign currency.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 2, "quote": "Any permitted currency i.e. a foreign currency which is freely convertible"}, {"doc_id": "rbi_faq_accounts_nonresidents", "page": 2, "quote": "Term Deposit only"}]},
+      {"statement": "NRO money is not repatriable except for current income, with a separate USD 1 million yearly facility.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 3, "quote": "Not repatriable except for all current income"}]}
+    ],
+    "roadmap": [
+      {"stage": "before_you_move", "step": "List which of NRE, NRO and FCNR(B) accounts you hold, because each is handled differently when you return.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 4, "quote": "NRE accounts should be designated as resident accounts or the funds held in these accounts may be transferred to the RFC accounts"}]}
+    ],
+    "missing_information": [
+      {"field": "indian_accounts", "why_it_matters": "What happens on return depends on which accounts you hold.", "if_this_then_that": "Each account type gets its own steps."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "The RBI FAQ (as on 16 January 2025) compares the three accounts in one table."
+  },
+  {
+    "id": "nre-credits-debits",
+    "summary": "An NRE account takes remittances from abroad, interest on the account and on investments, transfers from other NRE or FCNR(B) accounts, and maturity proceeds of investments made from it. You can use it for local payments, remittances abroad, transfers to other NRE or FCNR(B) accounts and investments in India. The FAQ says the income earned in it is exempt from income tax, which is the position while you are a non-resident.",
+    "findings": [
+      {"statement": "Permitted credits are inward remittances, interest on the account, interest on investment, transfers from other NRE or FCNR(B) accounts, and maturity proceeds of investments made from it.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 2, "quote": "Credits permitted to this account are inward remittance from outside India, interest accruing on the account, interest on investment, transfer from other NRE/ FCNR(B) accounts"}]},
+      {"statement": "Current income such as rent, dividend, pension and interest counts as a permissible credit.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 2, "quote": "Current income like rent, dividend, pension, interest etc. will be construed as a permissible credit to the NRE account"}]},
+      {"statement": "Permitted debits are local disbursements, remittance outside India, transfers to other NRE or FCNR(B) accounts and investments in India.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 3, "quote": "Permissible debits are local disbursements, remittance outside India, transfer to other NRE/ FCNR(B) accounts and investments in India"}]},
+      {"statement": "The FAQ says income earned in NRE and FCNR(B) accounts is exempt from income tax.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 3, "quote": "Income earned in the accounts is exempt from income tax"}]}
+    ],
+    "roadmap": [
+      {"stage": "before_you_move", "step": "Keep money that should stay repatriable in the NRE account, and use it only for the credits and debits the FAQ allows.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 3, "quote": "Permissible debits are local disbursements, remittance outside India"}]},
+      {"stage": "first_30_days", "step": "Plan for the account to change when you return, because the tax statement here applies to non-residents.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 4, "quote": "NRE accounts should be designated as resident accounts or the funds held in these accounts may be transferred to the RFC accounts"}]}
+    ],
+    "missing_information": [
+      {"field": "relocation_status", "why_it_matters": "The tax statement is for a non-resident account holder.", "if_this_then_that": "After you become a resident, the account is redesignated and tax treatment is decided under your new status."}
+    ],
+    "confidence": "medium",
+    "confidence_reason": "The credits and debits are stated directly. The tax line is the RBI FAQ's own wording as on 16 January 2025 and applies only while you are a non-resident. It does not cover tax after you return."
+  },
+  {
+    "id": "who-is-nri-pio-oci",
+    "summary": "For bank accounts, the RBI defines an NRI as a person resident outside India who is a citizen of India. A person of Indian origin (PIO) is also resident outside India, with Indian roots, and the definition includes Overseas Citizen of India (OCI) cardholders who live outside India.",
+    "findings": [
+      {"statement": "A Non-resident Indian is a person resident outside India who is a citizen of India.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 1, "quote": "A Non-resident Indian (NRI) is a person resident outside India who is a citizen of India"}]},
+      {"statement": "A PIO includes an Overseas Citizen of India cardholder, and that cardholder must also be resident outside India.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 1, "quote": "A PIO will include an Overseas Citizen of India cardholder within the meaning of Section 7(A) of the Citizenship Act, 1955"}, {"doc_id": "rbi_faq_accounts_nonresidents", "page": 1, "quote": "Such an OCI Card holder should also be a person resident outside India"}]}
+    ],
+    "roadmap": [
+      {"stage": "before_you_move", "step": "Check whether you are an Indian citizen, a PIO or an OCI cardholder, because the NRE, NRO and FCNR(B) rules in this FAQ are written for NRIs and PIOs.",
+       "citations": [{"doc_id": "rbi_faq_accounts_nonresidents", "page": 1, "quote": "A Non-resident Indian (NRI) is a person resident outside India who is a citizen of India"}]}
+    ],
+    "missing_information": [
+      {"field": "citizenship", "why_it_matters": "The definition depends on whether you are an Indian citizen or hold an OCI card.", "if_this_then_that": "An Indian citizen is covered as an NRI, and an OCI cardholder as a PIO, while resident outside India."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "The RBI FAQ (as on 16 January 2025) defines both terms."
+  },
+  {
+    "id": "resident-under-fema",
+    "summary": "Under FEMA, a person resident in India is generally someone who stayed in India for more than 182 days in the preceding financial year. There are exceptions for people who went abroad, or stay abroad, for a job, a business or any purpose that suggests they will stay abroad for an uncertain period.",
+    "findings": [
+      {"statement": "FEMA defines a person resident in India as a person residing in India for more than 182 days during the preceding financial year.",
+       "citations": [{"doc_id": "rbi_faq_fc_accounts_resident", "page": 1, "quote": "a person residing in India for more than one hundred and eighty-two days during the course of the preceding financial year"}]},
+      {"statement": "It does not include a person who has gone out of India or stays outside India for a job, a business or a purpose that suggests an uncertain stay abroad.",
+       "citations": [{"doc_id": "rbi_faq_fc_accounts_resident", "page": 1, "quote": "a person who has gone out of India or who stays outside India"}, {"doc_id": "rbi_faq_fc_accounts_resident", "page": 1, "quote": "in such circumstances as would indicate his intention to stay outside India for an uncertain period"}]}
+    ],
+    "roadmap": [
+      {"stage": "before_you_move", "step": "Count your days in India for the preceding financial year and note why you were abroad, because the FEMA test looks at both.",
+       "citations": [{"doc_id": "rbi_faq_fc_accounts_resident", "page": 1, "quote": "residing in India for more than one hundred and eighty-two days during the course of the preceding financial year"}]}
+    ],
+    "missing_information": [
+      {"field": "days_in_india_by_year", "why_it_matters": "The test counts days in the preceding financial year.", "if_this_then_that": "With your day counts you can check which side of 182 days you fall on."},
+      {"field": "relocation_status", "why_it_matters": "The reason you were abroad is part of the test.", "if_this_then_that": "A job or business abroad can place you outside the definition."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "This is the FEMA definition quoted in the RBI FAQ. It is separate from the income tax residential status, which these documents do not explain."
+  },
+  {
+    "id": "rfc-account",
+    "summary": "A Resident Foreign Currency (RFC) account is a foreign currency account that an individual who is resident in India can hold with an authorised dealer bank. It can be a current, savings or term deposit account. Credits include benefits from an overseas employer, gifts or inheritance from certain persons, and balances from NRE or FCNR(B) accounts when your status changes. There are no restrictions on using the money in or outside India.",
+    "findings": [
+      {"statement": "The account can be current, savings or term deposit.",
+       "citations": [{"doc_id": "rbi_faq_fc_accounts_resident", "page": 2, "quote": "Current/ savings/ term deposits"}]},
+      {"statement": "Permitted credits include foreign exchange received as superannuation or other monetary benefits from an overseas employer.",
+       "citations": [{"doc_id": "rbi_faq_fc_accounts_resident", "page": 2, "quote": "Foreign exchange received by him as superannuation/ other monetary benefits from overseas employer"}]},
+      {"statement": "Balances in NRE and FCNR(B) accounts on a change in residential status can be credited.",
+       "citations": [{"doc_id": "rbi_faq_fc_accounts_resident", "page": 3, "quote": "Balances in NRE/ FCNR (B) accounts on change in residential status"}]},
+      {"statement": "There are no restrictions on using the money in or outside India.",
+       "citations": [{"doc_id": "rbi_faq_fc_accounts_resident", "page": 3, "quote": "No restrictions on utilisation in/ outside India"}]}
+    ],
+    "roadmap": [
+      {"stage": "first_30_days", "step": "If you want to keep NRE or FCNR(B) money in foreign currency, ask an authorised dealer bank about opening an RFC account.",
+       "citations": [{"doc_id": "rbi_faq_fc_accounts_resident", "page": 3, "quote": "Balances in NRE/ FCNR (B) accounts on change in residential status"}]},
+      {"stage": "first_year", "step": "Check which of your foreign receipts, such as overseas employer benefits or inheritance, fit the credits the RFC account allows.",
+       "citations": [{"doc_id": "rbi_faq_fc_accounts_resident", "page": 2, "quote": "Foreign exchange received by him as superannuation/ other monetary benefits from overseas employer"}]}
+    ],
+    "missing_information": [
+      {"field": "foreign_assets", "why_it_matters": "What you can credit depends on where the money comes from.", "if_this_then_that": "Employer benefits, gifts, inheritance and NRE or FCNR(B) balances each have their own credit rule."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "The RBI FAQ (as on 16 January 2025) lists the RFC features in one table."
+  },
+  {
+    "id": "keep-foreign-account",
+    "summary": "Yes. A person resident in India may keep a foreign currency account outside India if it was opened when they were resident outside India, or inherited from someone resident outside India. If the holder dies, a resident nominee has to close the account and bring the money back through banking channels.",
+    "findings": [
+      {"statement": "A resident may maintain a foreign currency account outside India if it was opened while resident outside India, or inherited from a person resident outside India.",
+       "citations": [{"doc_id": "rbi_faq_fc_accounts_resident", "page": 3, "quote": "A person resident in India may maintain a foreign currency account outside India if he had opened it when he was resident outside India or inherited it from a person resident outside India"}]},
+      {"statement": "If the account holder dies, a resident nominee has to close the account and bring the money to India through banking channels.",
+       "citations": [{"doc_id": "rbi_faq_fc_accounts_resident", "page": 4, "quote": "A resident nominee of an account held outside India has to close the account and bring back the proceeds to India through banking channels"}]},
+      {"statement": "Residents must report the details of foreign assets and accounts in Schedule FA of the income tax return.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 2, "quote": "Residents of India are required to furnish details of any foreign assets in this schedule"}]}
+    ],
+    "roadmap": [
+      {"stage": "first_30_days", "step": "Keep records showing when you opened the account, so you can show it was opened while you were resident outside India.",
+       "citations": [{"doc_id": "rbi_faq_fc_accounts_resident", "page": 3, "quote": "if he had opened it when he was resident outside India"}]},
+      {"stage": "first_year", "step": "List the account in Schedule FA of your income tax return if you are a resident for that year.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 2, "quote": "Residents of India are required to furnish details of any foreign assets in this schedule"}]}
+    ],
+    "missing_information": [
+      {"field": "foreign_assets", "why_it_matters": "The permission covers accounts opened while you were non-resident or inherited.", "if_this_then_that": "An account opened after you became a resident falls under different rules."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "The RBI FAQ (as on 16 January 2025) states the permission directly. The Schedule FA point comes from the Income Tax Department's guide."
+  },
+  {
+    "id": "section-115h",
+    "summary": "The ITR-2 asks returning NRIs this directly. If you were an NRI in earlier years but are a resident this year, the form lets you choose whether to claim the special provisions of Chapter XII-A (section 115H) for investment income from foreign exchange assets. The instructions only describe the question. They do not explain the conditions, so ask a chartered accountant before you decide.",
+    "findings": [
+      {"statement": "A resident who was an NRI in earlier years is asked whether to claim the benefit of the special provisions under Chapter XII-A for investment income from any foreign exchange asset.",
+       "citations": [{"doc_id": "it_itr2_instructions_ay2020_21", "page": 5, "quote": "If you were NRI in earlier years, but are a resident in India for this year, please specify whether you want to claim benefit of special provisions under Chapter XII-A in respect of investment income from any foreign exchange asset"}]},
+      {"statement": "The question is headed as the benefit under section 115H, applicable in case of a resident.",
+       "citations": [{"doc_id": "it_itr2_instructions_ay2020_21", "page": 5, "quote": "Do you want to claim the benefit u/s 115H"}]}
+    ],
+    "roadmap": [
+      {"stage": "first_year", "step": "When you file, answer the section 115H question in the return, and ask a chartered accountant whether claiming it suits your case.",
+       "citations": [{"doc_id": "it_itr2_instructions_ay2020_21", "page": 5, "quote": "please specify whether you want to claim benefit of special provisions under Chapter XII-A"}]}
+    ],
+    "missing_information": [
+      {"field": "relocation_status", "why_it_matters": "The question is for someone who was an NRI earlier and is a resident this year.", "if_this_then_that": "If you are still a non-resident, the question does not apply."}
+    ],
+    "review_reasons": ["The documents describe the section 115H question but not its conditions, so a chartered accountant should confirm it."],
+    "confidence": "medium",
+    "confidence_reason": "The instructions are for assessment year 2020-21 and only describe the question. They do not set out who qualifies or what the benefit is."
+  },
+  {
+    "id": "schedule-fa-who",
+    "summary": "Schedule FA is for residents. The Income Tax Department's guide says residents must disclose all foreign assets and accounts where they are the legal owner, beneficial owner or beneficiary. If you are classified as not ordinarily resident or non-resident, you do not need to complete it.",
+    "findings": [
+      {"statement": "Residents of India are required to give details of any foreign assets in Schedule FA.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 2, "quote": "Residents of India are required to furnish details of any foreign assets in this schedule"}]},
+      {"statement": "Schedule FA need not be completed if you are classified as not ordinarily resident or as a non-resident.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 2, "quote": "Schedule FA need not be completed if the taxpayer is classified as not ordinarily resident or a non-resident"}]},
+      {"statement": "A beneficial owner is someone who provided the consideration for the asset, directly or indirectly, and the asset is held for their benefit or another person's.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 2, "quote": "Beneficial owner in respect of an asset means an individual who has provided, directly or indirectly, consideration for the asset"}]}
+    ],
+    "roadmap": [
+      {"stage": "before_you_move", "step": "Work out whether you will be resident, not ordinarily resident or non-resident for the year, because that decides whether Schedule FA applies to you.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 2, "quote": "Schedule FA need not be completed if the taxpayer is classified as not ordinarily resident or a non-resident"}]},
+      {"stage": "first_year", "step": "If you are a resident, list every foreign asset and account you own or benefit from.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 2, "quote": "the details of all foreign assets or accounts in respect of which you are a beneficial owner, a beneficiary or the legal owner, is required to be mandatorily disclosed in the Schedule FA"}]}
+    ],
+    "missing_information": [
+      {"field": "relocation_status", "why_it_matters": "Whether Schedule FA applies depends on your status for the year.", "if_this_then_that": "A not ordinarily resident or non-resident status means you need not complete it."},
+      {"field": "days_in_india_by_year", "why_it_matters": "Your days in India feed into the status.", "if_this_then_that": "With your day counts, a chartered accountant can tell you which status applies."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "The guide states who must fill Schedule FA directly. How your residential status is decided is set by the Income-tax Act, which the guide does not explain."
+  },
+  {
+    "id": "schedule-fa-tables",
+    "summary": "Schedule FA is split into tables by type of asset: foreign depository accounts, foreign custodian accounts, foreign equity and debt interests, insurance or annuity contracts with cash value, financial interests in foreign entities, immovable property abroad, other capital assets, accounts where you have signing authority, trusts, and other foreign income. It covers what you held at any time during the calendar year ending on 31 December.",
+    "findings": [
+      {"statement": "Table A1 covers foreign depository accounts, and Table A2 covers accounts maintained with foreign custodians.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 2, "quote": "Table A1 Foreign Depository Accounts"}, {"doc_id": "it_guide_fsi_tr_fa_2026", "page": 3, "quote": "Accounts maintained with foreign custodians"}]},
+      {"statement": "Table A3 covers foreign equity and debt interests, and Table A4 covers foreign cash value insurance or annuity contracts.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 3, "quote": "Table A3 Foreign Equity and Debt Interest"}, {"doc_id": "it_guide_fsi_tr_fa_2026", "page": 3, "quote": "Table A4 Foreign Cash Value Insurance or Annuity Contracts"}]},
+      {"statement": "Table C covers immovable property outside India, and Table D covers other capital assets outside India.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 3, "quote": "Table C Immovable Property Outside India"}, {"doc_id": "it_guide_fsi_tr_fa_2026", "page": 4, "quote": "Table D Other Capital Assets Outside India"}]},
+      {"statement": "Table E covers foreign accounts where you hold signing authority and that are not reported in the earlier tables.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 4, "quote": "Foreign Accounts with Signing Authority"}]},
+      {"statement": "The tables cover foreign assets or accounts held at any time during the calendar year ending on 31 December.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 2, "quote": "held at any time during the relevant calendar year ending on December 31st"}]}
+    ],
+    "roadmap": [
+      {"stage": "first_year", "step": "Go through your foreign bank accounts, custodian accounts, shares and debt, insurance contracts, property and signing-authority accounts, and match each one to its table.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 2, "quote": "Taxpayers must furnish details of foreign assets or accounts of the following nature"}]},
+      {"stage": "first_year", "step": "Include anything you held at any point in the calendar year, even if you closed it before the year ended.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 2, "quote": "held at any time during the relevant calendar year ending on December 31st"}]}
+    ],
+    "missing_information": [
+      {"field": "foreign_assets", "why_it_matters": "Each type of asset goes in a different table.", "if_this_then_that": "Tell a chartered accountant which accounts, shares, policies and property you hold and they can map them."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "The guide (for assessment year 2025-26) lists the tables directly. It describes them in summary and does not give every field."
+  },
+  {
+    "id": "schedule-fa-rates",
+    "summary": "Values in Schedule FA must be converted into rupees using the telegraphic transfer buying rate of the foreign currency, which is the State Bank of India's rate, as on the relevant date. The relevant date is the date of the peak balance, the date of investment or the closing date of the calendar year, depending on the item. The period is the calendar year ending on 31 December.",
+    "findings": [
+      {"statement": "Peak balances, investment values and foreign income must be converted into rupees using the telegraphic transfer buying rate of the foreign currency.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 4, "quote": "All peak balances, values of investment, and amounts of foreign-sourced income must be converted into Indian currency using the telegraphic transfer buying rate of the foreign currency"}]},
+      {"statement": "The relevant date is the date of the peak balance, the date of investment, or the closing date of the calendar year ending on 31 December.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 4, "quote": "the date of peak balance in the account, the date of investment, or the closing date of the calendar year ending on December 31st"}]},
+      {"statement": "The telegraphic transfer buying rate is the rate of exchange adopted by the State Bank of India for buying that currency.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 4, "quote": "the rate of exchange adopted by the State Bank of India"}]},
+      {"statement": "For assessment year 2025-26, the calendar year runs from 1 January 2024 to 31 December 2024.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 4, "quote": "the period from January 1, 2024, to December 31, 2024"}]}
+    ],
+    "roadmap": [
+      {"stage": "first_year", "step": "For each foreign account or asset, note the peak balance date, the investment date and the 31 December closing value, and get the State Bank of India buying rate for each date.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 4, "quote": "the date of peak balance in the account, the date of investment, or the closing date of the calendar year ending on December 31st"}]},
+      {"stage": "first_year", "step": "Convert every foreign amount into rupees at the telegraphic transfer buying rate before you enter it.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 4, "quote": "must be converted into Indian currency using the telegraphic transfer buying rate of the foreign currency"}]}
+    ],
+    "missing_information": [
+      {"field": "foreign_assets", "why_it_matters": "Each asset may need a different date for conversion.", "if_this_then_that": "Accounts need the peak balance date and the year-end date, while investments need the date you invested."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "The guide (for assessment year 2025-26) states the rule and the period directly."
+  },
+  {
+    "id": "itr-form-choice",
+    "summary": "Do not use ITR-1 or ITR-4 if you have foreign assets or foreign income, because they do not have Schedule FA. The Income Tax Department advises filing a return form other than those two. These documents do not say which other form fits you, so ask a chartered accountant.",
+    "findings": [
+      {"statement": "ITR-1 and ITR-4, the two simplest forms, do not have the Schedule FA section.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 1, "quote": "The two simplest Income Tax return forms ITR-1 and ITR-4 do not contain the required Schedule FA section"}]},
+      {"statement": "Taxpayers with any foreign assets or income should not file using ITR-1 or ITR-4.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 1, "quote": "Taxpayers with any foreign assets or income should not file using ITR-1 or ITR-4"}]},
+      {"statement": "Taxpayers are advised to use return forms other than ITR-1 and ITR-4 for filling Schedule FA.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 2, "quote": "taxpayers are advised to fill return forms other than ITR-1 and ITR-4 for filling Schedule FA"}]}
+    ],
+    "roadmap": [
+      {"stage": "first_year", "step": "Before you file, pick a return form that has Schedule FA, which means not ITR-1 or ITR-4, and confirm the exact form with a chartered accountant.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 1, "quote": "should not file using ITR-1 or ITR-4"}]}
+    ],
+    "missing_information": [
+      {"field": "foreign_assets", "why_it_matters": "Having foreign assets or foreign income is what rules out ITR-1 and ITR-4.", "if_this_then_that": "If you have none, the form choice depends on your other income, which these documents do not cover."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "Both Income Tax Department documents state this directly. They do not name the correct form to use."
+  },
+  {
+    "id": "foreign-tax-credit",
+    "summary": "If you are a resident and paid tax abroad on foreign income, you report that income in Schedule FSI and claim relief in India through Schedule TR and Form 67. You also name the relevant article of the tax treaty (DTAA) and the section under which you claim relief: section 90, 90A or 91.",
+    "findings": [
+      {"statement": "Schedule FSI applies to taxpayers who are residents of India, and they report all income from outside India in it.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 1, "quote": "Schedule FSI applies to taxpayers who are residents of India"}]},
+      {"statement": "If you paid tax outside India and claim relief, you name the relevant article of the applicable tax treaty (DTAA).",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 1, "quote": "mention the relevant article of the applicable Double Taxation Avoidance Agreement (DTAA)"}]},
+      {"statement": "Details of the foreign tax credit and the income must be reported in Form 67 to claim the credit in India.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 1, "quote": "Ensure that details of foreign tax credit and income are reported in Form 67 to claim the credit in India"}]},
+      {"statement": "Schedule TR summarises the relief for each country, and you name the provision: section 90, section 90A or section 91.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 2, "quote": "section 90, section 90A, or section 91"}]},
+      {"statement": "Relief is claimed by filing Schedule TR along with Form 67 online.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 1, "quote": "taxpayers can claim tax relief on taxes paid abroad by filing Schedule TR (Tax Relief) along with Form 67 online"}]}
+    ],
+    "roadmap": [
+      {"stage": "first_year", "step": "List each foreign income item in Schedule FSI with the country code and the tax identification number from that country (or your passport number if none was issued).",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 1, "quote": "If the country has not allotted a TIN, provide the passport number instead"}]},
+      {"stage": "first_year", "step": "File Form 67 with the foreign tax credit details, and claim the relief in Schedule TR.",
+       "citations": [{"doc_id": "it_guide_fsi_tr_fa_2026", "page": 1, "quote": "Ensure that details of foreign tax credit and income are reported in Form 67 to claim the credit in India"}]}
+    ],
+    "missing_information": [
+      {"field": "foreign_assets", "why_it_matters": "The income and tax paid per country decide the entries.", "if_this_then_that": "Each country needs its own set of entries."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "The Income Tax Department's guide (for assessment year 2025-26) states the steps directly."
+  },
+  {
+    "id": "crs-fatca",
+    "summary": "Under CRS and FATCA, foreign banks and financial institutions report accounts held by residents of other countries to their tax authorities, and India receives detailed information about financial accounts held by its residents abroad. That can include your name, address, tax identification number, account number, balance and income. The Income Tax Department uses it to spot taxpayers who have not reported foreign assets.",
+    "findings": [
+      {"statement": "CRS is an OECD initiative that requires financial institutions to report information about accounts held by foreign residents to their tax jurisdictions.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 1, "quote": "CRS, is an initiative of the OECD, requiring financial institutions to report information about financial accounts held by foreign residents to their respective tax jurisdictions"}]},
+      {"statement": "FATCA, enacted by the United States, requires foreign financial institutions to report accounts held by US taxpayers to the IRS.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 1, "quote": "FATCA, enacted by the United States, mandates foreign financial institutions to report accounts held by U.S. taxpayers to the IRS"}]},
+      {"statement": "India receives detailed information about financial accounts held by its residents in foreign jurisdictions.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 1, "quote": "India receives detailed information about financial accounts held by its residents in foreign jurisdictions"}]},
+      {"statement": "The information can include name, address, tax identification number, account number and balance, and income details.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 1, "quote": "account holder's name, address, and tax identification number (TIN), account number and balance, and income details"}]},
+      {"statement": "This helps the Income Tax Department learn the global income of residents and identify those who may not have reported foreign assets and income.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 1, "quote": "This information helps the Income Tax Department to know global income of its resident taxpayers and to identify taxpayers who may not have reported their foreign assets and income"}]}
+    ],
+    "roadmap": [
+      {"stage": "first_year", "step": "Report your foreign assets in Schedule FA and your foreign income in Schedule FSI, because the department can see the account information banks share.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 1, "quote": "Schedule FA (Foreign Assets) in the ITR form is meant for reporting foreign assets, and Schedule FSI (Foreign Source Income) is for reporting income from foreign sources"}]},
+      {"stage": "first_year", "step": "Keep your foreign account statements, so what you report matches what your foreign bank reports.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 1, "quote": "India receives detailed information about financial accounts held by its residents in foreign jurisdictions"}]}
+    ],
+    "missing_information": [
+      {"field": "foreign_assets", "why_it_matters": "The information shared depends on which foreign accounts you hold.", "if_this_then_that": "Each foreign account may be reported by its bank."}
+    ],
+    "confidence": "high",
+    "confidence_reason": "The Income Tax Department's document on CRS and FATCA states this directly."
+  },
+  {
+    "id": "missed-disclosure",
+    "summary": "The Income Tax Department says you can rectify a missed disclosure by filing a revised return. It also warns that not reporting foreign assets and income can bring assessment, stringent penalties and prosecution under the Black Money Act, 2015. The guide gave a revised-return deadline for assessment year 2025-26, so check the current deadline for your year.",
+    "findings": [
+      {"statement": "If you did not report foreign assets and income in your original return, you can rectify it by filing a revised return.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 2, "quote": "there is an opportunity to rectify this through filing a revised return"}]},
+      {"statement": "Not reporting foreign assets and income can attract assessment, stringent penalties and prosecution under the Black Money Act, 2015.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 2, "quote": "Failure to report foreign assets and income can attract assessment and also stringent penalties and prosecutions under the Black Money"}]},
+      {"statement": "A revised return must use a form that has Schedule FA, so not ITR-1 or ITR-4.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 2, "quote": "taxpayers are advised to fill return forms other than ITR-1 and ITR-4 for filling Schedule FA, while filing revised return"}]},
+      {"statement": "For assessment year 2025-26, the document says a revised return can be filed up to 31 December 2025.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 2, "quote": "For the A.Y. 2025-26 revised return can be filed up to 31.12.2025"}]}
+    ],
+    "roadmap": [
+      {"stage": "first_30_days", "step": "Gather your foreign account and asset details for the year you missed, and speak to a chartered accountant about a revised return.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 2, "quote": "there is an opportunity to rectify this through filing a revised return"}]},
+      {"stage": "first_30_days", "step": "Check the current revised-return deadline for your assessment year, because the one in this document is for 2025-26.",
+       "citations": [{"doc_id": "it_foreign_assets_transparency", "page": 2, "quote": "For the A.Y. 2025-26 revised return can be filed up to 31.12.2025"}]}
+    ],
+    "missing_information": [
+      {"field": "move_date", "why_it_matters": "Whether a year needed Schedule FA depends on your status in that year.", "if_this_then_that": "If you were not ordinarily resident or non-resident that year, Schedule FA may not have been required."}
+    ],
+    "review_reasons": ["Possible penalties for non-disclosure, so a chartered accountant should review your situation."],
+    "confidence": "medium",
+    "confidence_reason": "The revised-return opportunity and the penalty warning are stated directly. The deadline given is specific to assessment year 2025-26 and has passed."
+  },
+  {
+    "id": "status-in-itr",
+    "summary": "The ITR-2 asks individuals to choose one residential status: Resident, Resident but not Ordinarily resident (RNOR), or Non-resident. If you are a resident or RNOR, you also tick the basis for your claim. A non-resident gives the country of residence and tax identification number. These instructions are for assessment year 2020-21 and do not explain how the status itself is decided.",
+    "findings": [
+      {"statement": "An individual picks one of three statuses: Resident, Resident but not Ordinarily resident (RNOR), or Non-resident.",
+       "citations": [{"doc_id": "it_itr2_instructions_ay2020_21", "page": 4, "quote": "If you are an individual, please specify your residential status in the given list"}, {"doc_id": "it_itr2_instructions_ay2020_21", "page": 4, "quote": "Resident but not Ordinarily resident (RNOR)"}]},
+      {"statement": "A resident or RNOR also indicates the basis for claiming that status by checking the applicable box.",
+       "citations": [{"doc_id": "it_itr2_instructions_ay2020_21", "page": 4, "quote": "please also indicate the basis for claiming status of resident/RNOR by checking the applicable box"}]},
+      {"statement": "A non-resident gives the jurisdiction of residence in the previous year and the tax identification number there.",
+       "citations": [{"doc_id": "it_itr2_instructions_ay2020_21", "page": 4, "quote": "please specify the jurisdiction of residence during the previous year and your Taxpayer Identification Number (TIN) in that jurisdiction"}]},
+      {"statement": "A non-resident who is an Indian citizen or person of Indian origin also gives the days spent in India in the previous year and the four preceding years.",
+       "citations": [{"doc_id": "it_itr2_instructions_ay2020_21", "page": 4, "quote": "please specify the total number of days for which you stayed in India during the previous year, and during the four preceding years"}]}
+    ],
+    "roadmap": [
+      {"stage": "before_you_move", "step": "Keep a record of your days in India for the previous year and the four years before it, because the form asks for them from non-residents who are Indian citizens or persons of Indian origin.",
+       "citations": [{"doc_id": "it_itr2_instructions_ay2020_21", "page": 4, "quote": "during the previous year, and during the four preceding years"}]},
+      {"stage": "first_year", "step": "When you file, choose Resident, RNOR or Non-resident, and tick the basis for your claim if you choose Resident or RNOR.",
+       "citations": [{"doc_id": "it_itr2_instructions_ay2020_21", "page": 4, "quote": "please also indicate the basis for claiming status of resident/RNOR by checking the applicable box"}]}
+    ],
+    "missing_information": [
+      {"field": "days_in_india_by_year", "why_it_matters": "The form asks for your days in India, and your status depends on them.", "if_this_then_that": "With your day counts, a chartered accountant can tell you which status and basis apply."}
+    ],
+    "review_reasons": ["These instructions do not explain how your status is decided, so a chartered accountant should confirm it."],
+    "confidence": "medium",
+    "confidence_reason": "The options and extra details are stated directly, but the instructions are for assessment year 2020-21 and the tests that decide the status are not in them."
+  },
+  {
+    "id": "lrs-resident",
+    "summary": "Under the Liberalised Remittance Scheme, a resident individual can remit up to USD 250,000 per financial year (April to March) for permitted current or capital account transactions, or both. That covers things like gifts, supporting close relatives, buying shares, funds or property abroad, and repaying a loan taken abroad while a non-resident. A PAN is mandatory. This circular is from 1 July 2015, so check the current limit with your bank.",
+    "findings": [
+      {"statement": "Authorised dealers may freely allow remittances by resident individuals up to USD 250,000 per financial year for permitted current or capital account transactions, or both.",
+       "citations": [{"doc_id": "rbi_mc_6_2015_16", "page": 15, "quote": "Authorised Dealers may freely allow remittances by resident individuals up to USD 2,50,000 per financial year (April -March) for any permitted current or capital account transactions or a combination of both"}]},
+      {"statement": "The scheme is available to all resident individuals, including minors.",
+       "citations": [{"doc_id": "rbi_mc_6_2015_16", "page": 15, "quote": "The Scheme is available to all resident individuals including minors"}]},
+      {"statement": "Residents can acquire and hold shares, debt instruments or any other asset, including immovable property, outside India without prior RBI approval.",
+       "citations": [{"doc_id": "rbi_mc_6_2015_16", "page": 16, "quote": "Resident individuals are free to acquire and hold shares or debt instruments or any other asset including immovable property outside India without prior approval of the Reserve Bank"}]},
+      {"statement": "A person who took a loan abroad as a non-resident can repay it on returning to India under the scheme.",
+       "citations": [{"doc_id": "rbi_mc_6_2015_16", "page": 16, "quote": "An individual who has availed of a loan abroad while as a non -resident can repay the same on return to India under the Scheme as a resident"}]},
+      {"statement": "Gifts and supporting close relatives abroad are covered by the same limit.",
+       "citations": [{"doc_id": "rbi_mc_6_2015_16", "page": 9, "quote": "A resident individual can remit up-to USD 250,000 per financial year towards maintenance of close relatives"}]},
+      {"statement": "A PAN is mandatory to remit under the scheme, and it is not available for capital account remittances to countries named by the Financial Action Task Force.",
+       "citations": [{"doc_id": "rbi_mc_6_2015_16", "page": 17, "quote": "It is mandatory to have PAN number to make remittances under the Scheme"}, {"doc_id": "rbi_mc_6_2015_16", "page": 17, "quote": "The Scheme is not available for capital account remittances to countries identified by Financial Action Task Force"}]}
+    ],
+    "roadmap": [
+      {"stage": "first_30_days", "step": "Make sure you have a PAN before you remit under the scheme.",
+       "citations": [{"doc_id": "rbi_mc_6_2015_16", "page": 17, "quote": "It is mandatory to have PAN number to make remittances under the Scheme"}]},
+      {"stage": "first_year", "step": "Ask your bank for the current limit and forms before sending money abroad, because this circular dates from 2015.",
+       "citations": [{"doc_id": "rbi_mc_6_2015_16", "page": 1, "quote": "Master Circular No. 6/2015-16 July 1, 2015"}]}
+    ],
+    "missing_information": [
+      {"field": "relocation_status", "why_it_matters": "The scheme is for resident individuals.", "if_this_then_that": "While you are a non-resident, the NRO and NRE rules apply instead."}
+    ],
+    "confidence": "medium",
+    "confidence_reason": "The RBI Master Circular is dated 1 July 2015. The scheme's limit and conditions may have been updated since, so confirm the current ones with your bank."
+  }
+]

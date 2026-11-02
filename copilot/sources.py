@@ -22,6 +22,17 @@ def describe_citation(c) -> str:
             f"([open that page]({c.page_url}) or [get the full document]({c.document_url}))")
 
 
+def describe_sources(citations) -> str:
+    """Markdown for the sources behind one statement: each exact quote (when there is one)
+    followed by the document, its issuer, release date and page."""
+    lines = []
+    for c in citations:
+        if c.quote:
+            lines.append(f"*“{c.quote}”*")
+        lines.append("Source: " + describe_citation(c))
+    return "  \n  ".join(lines)
+
+
 def footer_lines(manifest_path=None) -> list[str]:
     with open(manifest_path or config.MANIFEST_PATH, newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
