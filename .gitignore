@@ -1,0 +1,29 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Environments and caches
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Generated data
+data/chroma/
+data/chroma_tune_*/
+data/hf_cache/
+analytics/threads.jsonl
+analytics/threads_tagged.jsonl
+
+# Evaluation run outputs
+evals/results.md
+evals/results.csv
+evals/manual_audit.csv
+evals/history/
+evals/TUNING_LOG.md
+
+# Logs and scratch files
+*.log
+tmp/

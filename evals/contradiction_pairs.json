@@ -1,0 +1,82 @@
+[
+  {
+    "id": "C01",
+    "doc_id": "rbi_nro_master_circular_2015",
+    "page": 6,
+    "snippet": "When you come back to India for good you can convert your NRO account into a normal resident rupee savings account.",
+    "label": "agrees",
+    "notes": ""
+  },
+  {
+    "id": "C02",
+    "doc_id": "rbi_nro_master_circular_2015",
+    "page": 6,
+    "snippet": "An NRO account cannot be converted after you return. The bank will force you to close it and open a new one.",
+    "label": "contradicts",
+    "notes": ""
+  },
+  {
+    "id": "C03",
+    "doc_id": "rbi_nro_master_circular_2015",
+    "page": 5,
+    "snippet": "You can send up to one million US dollars a year out of your NRO account, along with your other eligible assets.",
+    "label": "agrees",
+    "notes": ""
+  },
+  {
+    "id": "C04",
+    "doc_id": "rbi_nro_master_circular_2015",
+    "page": 5,
+    "snippet": "There is absolutely no limit on how much money you can move abroad from an NRO account each year.",
+    "label": "contradicts",
+    "notes": ""
+  },
+  {
+    "id": "C05",
+    "doc_id": "it_guide_fsi_tr_fa_2026",
+    "page": 2,
+    "snippet": "If you are classed as not ordinarily resident you do not have to fill the foreign assets schedule.",
+    "label": "agrees",
+    "notes": ""
+  },
+  {
+    "id": "C06",
+    "doc_id": "it_guide_fsi_tr_fa_2026",
+    "page": 2,
+    "snippet": "Even if you are a non-resident you must always fill the foreign assets schedule in your return.",
+    "label": "contradicts",
+    "notes": ""
+  },
+  {
+    "id": "C07",
+    "doc_id": "it_guide_fsi_tr_fa_2026",
+    "page": 1,
+    "snippet": "The simple ITR-1 form has no place for foreign assets, so you need a different form if you hold any.",
+    "label": "agrees",
+    "notes": ""
+  },
+  {
+    "id": "C08",
+    "doc_id": "it_guide_fsi_tr_fa_2026",
+    "page": 1,
+    "snippet": "ITR-1 is perfectly fine for reporting foreign bank accounts, there is a section for it.",
+    "label": "contradicts",
+    "notes": ""
+  },
+  {
+    "id": "C09",
+    "doc_id": "it_guide_fsi_tr_fa_2026",
+    "page": 4,
+    "snippet": "Which credit card gives the most airline miles on flights from Bengaluru?",
+    "label": "unrelated",
+    "notes": ""
+  },
+  {
+    "id": "C10",
+    "doc_id": "rbi_faq_accounts_nonresidents",
+    "page": 4,
+    "snippet": "Flights to India are usually cheapest if you book about two months ahead.",
+    "label": "unrelated",
+    "notes": ""
+  }
+]
