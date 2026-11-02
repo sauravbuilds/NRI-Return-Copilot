@@ -60,7 +60,9 @@ SCOPE_CLASSIFIER = """Classify the user's request into exactly one label:
                       returning to India (including paperwork for moving or holding
                       investments: that is a rules question). A question that ALSO has a
                       foreign-country side, such as moving a US 401(k) to India, is in_scope
-                      because its Indian side can be answered.
+                      because its Indian side can be answered. Questions about how Indian
+                      accounts and assets are reported or shared with tax authorities, such
+                      as CRS and FATCA, are in_scope too.
   investment_advice - asks what to buy, sell, hold or invest in, or which is a better
                       investment
   us_side_tax       - asks ONLY about United States tax law or filings (IRS, FBAR, US tax on

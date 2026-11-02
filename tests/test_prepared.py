@@ -61,8 +61,10 @@ def test_only_full_sourced_answers_with_reasonable_confidence_are_kept():
     assert prepared.good_enough(result(confidence="medium"))
     assert not prepared.good_enough(result(confidence="low"))
     assert not prepared.good_enough(result(kind="abstained"))
-    assert not prepared.good_enough(result(findings=0))
-    assert not prepared.good_enough(result(steps=1))
+    assert prepared.good_enough(result(findings=2, steps=0))   # a definition: findings, no steps
+    assert prepared.good_enough(result(findings=0, steps=2))
+    assert not prepared.good_enough(result(findings=1, steps=0))  # too little to keep
+    assert not prepared.good_enough(result(findings=0, steps=1))
 
 
 def test_common_questions_file_is_well_formed():

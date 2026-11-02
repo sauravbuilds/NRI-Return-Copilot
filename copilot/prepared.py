@@ -27,11 +27,15 @@ class PreparedAnswer:
     prepared_on: str
 
 
+MIN_CITED_ITEMS = 2  # findings plus roadmap steps; each one carries a citation
+
+
 def good_enough(result) -> bool:
-    """Only a full, sourced answer with reasonable confidence is worth keeping."""
+    """Only a sourced answer with reasonable confidence and some substance is worth keeping.
+    A definition ("What is Schedule FA?") may be all findings and no steps, so either counts."""
     answer = result.answer
     return bool(result.kind == "answered" and answer and answer.confidence != "low"
-                and answer.official_findings and len(answer.roadmap) >= 2)
+                and len(answer.official_findings) + len(answer.roadmap) >= MIN_CITED_ITEMS)
 
 
 def documents_fingerprint(manifest_path=None) -> str:
