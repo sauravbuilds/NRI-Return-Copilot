@@ -2,7 +2,11 @@
 
 An assistant that shows returning NRIs which Indian rules and paperwork apply to their situation. Answers come from official RBI and Income Tax documents, and every statement links to the exact page it came from. Community discussion is shown separately and marked as unofficial.
 
-**Live app:** ADD LINK HERE
+**Demo video (about 2 minutes):** [Watch on Loom](https://www.loom.com/share/2c80eb01aa0f482a9f9f385cfb9a2e17)
+
+**Live app:** [nri-return-copilot.streamlit.app](https://nri-return-copilot.streamlit.app/)
+
+> **Note:** the first load can take a minute or two. The app is hosted on Streamlit's free Community Cloud, which puts apps to sleep after a period of no visitors, and it has to start up again when someone opens it. Once it is awake, pages respond normally. The video above is the quickest way to see how it works.
 
 ## Overview
 
