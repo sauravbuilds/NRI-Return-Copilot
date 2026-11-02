@@ -18,7 +18,8 @@ TAGGED_PATH = config.ROOT / "analytics" / "threads_tagged.jsonl"
 
 
 def tag_thread(thread: dict) -> ThreadTag:
-    return llm.structured_call(ThreadTag, THREAD_TAGGER, f"Title: {thread['title']}\nSnippet: {thread['snippet']}")
+    return llm.structured_call(ThreadTag, THREAD_TAGGER, f"Title: {thread['title']}\nSnippet: {thread['snippet']}",
+                               fast=True)
 
 
 def tag_all(src=config.COMMUNITY_JSONL, dest=TAGGED_PATH) -> int:

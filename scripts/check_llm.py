@@ -16,8 +16,8 @@ from copilot.schemas import ScopeResult  # noqa: E402
 from copilot.tools import days_in_india_calculator  # noqa: E402
 
 
-def check(provider: str) -> dict:
-    model = llm.get_chat_model(provider)
+def check(provider: str, fast: bool = False) -> dict:
+    model = llm.get_chat_model(provider, fast)
     out = {}
     for name, fn in {
         "reply": lambda: model.invoke("Reply with the single word: ok").content,
@@ -38,6 +38,7 @@ if __name__ == "__main__":
     if not found:
         sys.exit("No provider keys found. Add keys to .env (see .env.example).")
     for p in found:
-        print(f"\n{p} ({config.PROVIDERS[p]['model']})")
-        for k, v in check(p).items():
-            print(f"  {k:18} {v}")
+        for fast in ([False, True] if config.PROVIDERS[p]["fast_model"] != config.PROVIDERS[p]["model"] else [False]):
+            print(f"\n{p} ({llm.model_name(p, fast)}){' [fast]' if fast else ''}")
+            for k, v in check(p, fast).items():
+                print(f"  {k:18} {v}")

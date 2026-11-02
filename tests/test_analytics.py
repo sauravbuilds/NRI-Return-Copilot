@@ -29,7 +29,7 @@ def test_tagger_writes_tags_and_skips_failures(tmp_path, monkeypatch):
     calls = iter([ThreadTag(problem_type="other", stage="unclear", resolved="no"), RuntimeError("x"),
                   ThreadTag(problem_type="nre_nro_accounts", stage="first_year", resolved="yes")])
 
-    def fake(schema, system, user):
+    def fake(schema, system, user, **kwargs):
         v = next(calls)
         if isinstance(v, Exception):
             raise v

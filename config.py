@@ -31,21 +31,27 @@ COMMUNITY_JSONL = ROOT / "analytics" / "threads.jsonl"
 # a call fails (rate limit, outage) the next provider answers. Base URLs and
 # default model names follow each provider's docs and can change: override them
 # with the environment variables below. scripts/check_llm.py verifies each key.
+# `model` writes the answer. `fast_model` handles the small steps (scope check, profile,
+# search queries, comparisons); it is quicker and has its own daily quota on most free tiers.
 PROVIDERS = {
     "groq": dict(key_env="GROQ_API_KEY", base_url="https://api.groq.com/openai/v1",
-                 model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")),
+                 model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"),
+                 fast_model=os.getenv("GROQ_FAST_MODEL", "openai/gpt-oss-20b")),
     "gemini": dict(key_env="GEMINI_API_KEY",
                    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
-                   model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash")),
+                   model=os.getenv("GEMINI_MODEL", "gemini-3.5-flash"),
+                   fast_model=os.getenv("GEMINI_FAST_MODEL", "gemini-3.5-flash-lite")),
     "cerebras": dict(key_env="CEREBRAS_API_KEY", base_url="https://api.cerebras.ai/v1",
                      model=os.getenv("CEREBRAS_MODEL", "llama-3.3-70b")),
     "openrouter": dict(key_env="OPENROUTER_API_KEY", base_url="https://openrouter.ai/api/v1",
-                       model=os.getenv("OPENROUTER_MODEL", "meta-llama/llama-3.3-70b-instruct:free")),
+                       model=os.getenv("OPENROUTER_MODEL", "nvidia/nemotron-3.5-super-vl:free")),
     "mistral": dict(key_env="MISTRAL_API_KEY", base_url=None,  # native client
                     model=os.getenv("MISTRAL_MODEL", "mistral-small-latest")),
     "openai": dict(key_env="OPENAI_API_KEY", base_url=None,
                    model=os.getenv("OPENAI_MODEL", "gpt-4o-mini")),
 }
+for _cfg in PROVIDERS.values():  # a provider without a separate fast model uses its main one
+    _cfg.setdefault("fast_model", _cfg["model"])
 PROVIDER_ORDER = [p.strip() for p in
                   os.getenv("LLM_PROVIDER_ORDER", "groq,gemini,cerebras,openrouter,mistral").split(",")
                   if p.strip()]
@@ -56,6 +62,7 @@ LLM_MAX_RETRIES = 1
 # per minute, so a short pause usually clears it.
 RATE_LIMIT_WAIT_SECONDS = 30
 RATE_LIMIT_EXTRA_ROUNDS = 1
+RATE_LIMIT_COOLDOWN_SECONDS = 60  # after every provider is rate limited, fail fast for this long
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"  # local, free
 
 # --- Community search -------------------------------------------------------
@@ -86,6 +93,7 @@ RELEVANCE_THRESHOLD = 0.45
 # --- Query planning and answer pipeline ---------------------------------------
 MIN_QUERIES = 2
 MAX_QUERIES = 4
+OTHER_CONTEXT_QUERY_CHARS = 300  # how much free-text intake is used as a search query
 MAX_REGENERATIONS = 1  # regenerate once when an output check fails, then abstain
 
 # --- Guardrails -----------------------------------------------------------------
@@ -102,6 +110,13 @@ REQUIRED_PERSONA_FIELDS = ["relocation_status", "move_date", "indian_accounts",
 COMPLEX_ASSET_TYPES = ["us_stocks", "vested_rsus_esops", "mutual_funds",
                        "foreign_retirement_account", "property"]
 COMPLEX_ASSET_COUNT_FOR_ESCALATION = 3
+
+# --- Interface ----------------------------------------------------------------------
+# Prepared answers show live community discussions. One search per question is shared by
+# all visitors for this long, so repeat clicks do not use the search allowance.
+PREPARED_THREADS_TTL_SECONDS = 24 * 60 * 60
+# Developer aid: show the step-by-step run trace under each answer. Off for visitors.
+SHOW_RUN_TRACE = os.getenv("SHOW_RUN_TRACE") == "1"
 
 # --- Public usage limits (per browser session) ------------------------------------
 # Each question costs model and search calls on free-tier keys, so a public copy of the

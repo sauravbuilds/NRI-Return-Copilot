@@ -1,6 +1,9 @@
 """CA brief: built only from structured fields, never from raw user text."""
 from guardrails.pii import check_pii
 
+CITIZENSHIP_TEXT = {"indian_citizen": "Indian citizen", "oci": "OCI cardholder", "pio": "PIO cardholder",
+                    "other": "Foreign citizen without OCI or PIO"}
+
 
 def build_brief(persona, answer) -> str:
     sit = ["Situation (no identifiers):"]
@@ -8,6 +11,8 @@ def build_brief(persona, answer) -> str:
         sit.append(f"- Relocation status: {persona.relocation_status.replace('_', ' ')}")
     if persona.move_date:
         sit.append(f"- Move date: {persona.move_date:%B %Y}")
+    if persona.citizenship:
+        sit.append(f"- Citizenship status: {CITIZENSHIP_TEXT[persona.citizenship]}")
     if persona.countries_lived:
         sit.append(f"- Countries lived in: {', '.join(persona.countries_lived)}")
     if persona.days_in_india_by_year:

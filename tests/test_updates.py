@@ -7,7 +7,7 @@ import pytest
 import config
 from copilot import llm
 from copilot.retrieval import Chunk
-from copilot.schemas import Citation, UpdateVerdictResult
+from copilot.schemas import Citation, NumberedUpdateVerdict, UpdateVerdicts
 from copilot.sources import describe_citation, pretty_date
 from copilot.text import plain
 from copilot.updates import SearchUnavailable, compare_updates, fetch_official_updates, last_checked
@@ -79,7 +79,8 @@ def test_comparison_failure_keeps_the_item_as_unchecked(monkeypatch):
 
 def test_comparison_reason_has_no_dashes(monkeypatch):
     monkeypatch.setattr(llm, "structured_call",
-                        lambda *a, **k: UpdateVerdictResult(label="changes", reason="New limit — not the old one"))
+                        lambda *a, **k: UpdateVerdicts(verdicts=[NumberedUpdateVerdict(
+                            number=1, label="changes", reason="New limit — not the old one")]))
     chunk = Chunk("t", {"title": "Doc", "page": 1}, 0.9)
     out = compare_updates([{"url": "u", "title": "t", "snippet": "s", "date": ""}], [chunk])
     assert out[0].reason == "New limit, not the old one"

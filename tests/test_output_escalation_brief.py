@@ -70,7 +70,8 @@ def test_missing_information_must_list_every_empty_required_field():
 
 # --- escalation: one test per rule ------------------------------------------
 def test_rule_us_side_tax():
-    assert "US-side" in esc.escalation_reasons(Persona(), scope_label="us_side_tax")[0]
+    assert "US side" in esc.escalation_reasons(Persona(), scope_label="us_side_tax")[0]
+    assert "US side" in esc.escalation_reasons(Persona(), has_us_side=True)[0]  # an in-scope question with a US part
 
 
 def test_rule_complex_assets_three_or_more():

@@ -27,15 +27,15 @@ Write 'concerns' as a short summary with all personal identifiers
 (names, numbers, addresses) removed.
 """
 
-COMMUNITY_COMPARISON = """You receive OFFICIAL PASSAGES (each with title and page) and one
-COMMUNITY SNIPPET. Decide whether the snippet, on the specific point
-it makes, is:
+COMMUNITY_COMPARISON = """You receive OFFICIAL PASSAGES (each with title and page) and one or more
+numbered COMMUNITY SNIPPETS. For EACH snippet number, decide whether the snippet, on the
+specific point it makes, is:
   agrees      - consistent with the official passages
   contradicts - makes a claim that conflicts with a passage
   unrelated   - the passages do not address that point
-Use 'contradicts' only for a real conflict. Give one casual sentence
-of reasoning that names the passage, as you would tell a friend. Never
-use em dashes or en dashes. Do not judge beyond the official text.
+Return one verdict per snippet, using the snippet's own number. Use 'contradicts' only for a
+real conflict. Give one casual sentence of reasoning that names the passage, as you would
+tell a friend. Never use em dashes or en dashes. Do not judge beyond the official text.
 """
 
 EVAL_JUDGE = """You receive a CLAIM and the CITED PASSAGE TEXT. Decide whether the
@@ -58,12 +58,16 @@ If unsure, choose 'other' or 'unclear'. Do not guess.
 SCOPE_CLASSIFIER = """Classify the user's request into exactly one label:
   in_scope          - a question about Indian rules, paperwork or reporting for someone
                       returning to India (including paperwork for moving or holding
-                      investments: that is a rules question)
+                      investments: that is a rules question). A question that ALSO has a
+                      foreign-country side, such as moving a US 401(k) to India, is in_scope
+                      because its Indian side can be answered.
   investment_advice - asks what to buy, sell, hold or invest in, or which is a better
                       investment
-  us_side_tax       - asks about United States tax law or filings (IRS, FBAR, US tax on
-                      a 401(k) or RSUs, and similar)
+  us_side_tax       - asks ONLY about United States tax law or filings (IRS, FBAR, US tax on
+                      a 401(k) or RSUs), with no part about Indian rules or paperwork
   out_of_scope      - anything else
+Also set has_us_side to true when a complete answer would also need US tax, US
+retirement-account or US brokerage rules, even if the label is in_scope. Otherwise false.
 Give a one-sentence reason."""
 
 ANSWER_ASSEMBLY = """You write the answer for NRI Return Copilot, an information tool.
@@ -80,7 +84,9 @@ Rules:
    missing_information item: field, why_it_matters, and an if_this_then_that note saying how
    the answer would change. Do not assume a value.
 5. Never recommend buying, selling or investing.
-6. Set confidence to low when the sources only partly answer the question.
+6. Set confidence to low when the sources only partly answer the question. If the context says
+   the question has a US side, answer only the Indian side from the sources, say plainly in
+   the summary that the US side needs a US tax professional, and never state a US rule.
 7. Write the way you would talk to a friend who asked for help: warm, relaxed and plain.
    Use "you" and contractions, keep sentences short, and explain any jargon in a few words.
    Never use em dashes or en dashes; use commas, full stops or the word "to" instead.
@@ -95,11 +101,12 @@ official terms, so work out what they actually need from their question and cont
 Rules: under 15 words each. Use only what the question and context say. Never include names,
 numbers, dates of birth, account details or any other personal identifier."""
 
-UPDATE_COMPARISON ="""You receive OUR PASSAGES (the official text an answer is based on, each with title
-and page) and one NEWER PUBLICATION from an official website, shown as a title and snippet.
-Decide what the newer publication means for those passages:
+UPDATE_COMPARISON = """You receive OUR PASSAGES (the official text an answer is based on, each with title
+and page) and one or more numbered NEWER PUBLICATIONS from official websites, each shown as a
+title and snippet. For EACH publication number, decide what it means for those passages:
   agrees     - it restates or is consistent with the passages
   changes    - it amends, replaces or adds a requirement that the passages describe differently
   unrelated  - it is about something the passages do not cover
-Use 'changes' only when the snippet clearly points to a different rule. Give one casual
-sentence of reasoning, as you would tell a friend. Never use em dashes or en dashes."""
+Return one verdict per publication, using its own number. Use 'changes' only when the snippet
+clearly points to a different rule. Give one casual sentence of reasoning, as you would tell
+a friend. Never use em dashes or en dashes."""

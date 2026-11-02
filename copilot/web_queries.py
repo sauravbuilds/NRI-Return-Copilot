@@ -32,7 +32,7 @@ def write_web_queries(question: str, persona: Persona) -> WebQueries:
     fallback = fallback_queries(question, persona)
     try:
         plan = llm.structured_call(SearchPlan, SEARCH_QUERY_WRITER,
-                                   f"Question: {question}\nContext: {persona.model_dump_json()}")
+                                   f"Question: {question}\nContext: {persona.model_dump_json()}", fast=True)
     except Exception:
         return fallback
     community, official = scrub(plan.community_query).strip(), scrub(plan.official_query).strip()

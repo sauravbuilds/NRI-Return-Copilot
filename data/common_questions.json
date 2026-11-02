@@ -1,0 +1,22 @@
+[
+  {"id": "accounts-return", "question": "What happens to my NRE and NRO accounts when I move back to India for good?"},
+  {"id": "convert-accounts", "question": "How do I convert my NRE and NRO accounts into resident accounts, and how soon must I do it?"},
+  {"id": "nre-fd-maturity", "question": "Can I keep my NRE fixed deposit until it matures after I return?"},
+  {"id": "rfc-account", "question": "What is a Resident Foreign Currency (RFC) account, and can I move my NRE balance into one?"},
+  {"id": "foreign-currency-account", "question": "Can I keep a foreign currency account after I become a resident of India?"},
+  {"id": "residential-status", "question": "How is my residential status decided when I return to India?"},
+  {"id": "rnor", "question": "What is RNOR status, and how long does it last after I return?"},
+  {"id": "foreign-income-tax", "question": "Is my income from abroad taxable in India after I return?"},
+  {"id": "report-foreign-assets", "question": "Do I have to report my foreign bank accounts and investments in my Indian tax return?"},
+  {"id": "schedule-fa", "question": "What is Schedule FA and who has to fill it in?"},
+  {"id": "us-brokerage", "question": "How do I report my US brokerage account and shares in my Indian tax return?"},
+  {"id": "rsus", "question": "How are vested RSUs from a foreign employer reported after I return to India?"},
+  {"id": "foreign-tax-credit", "question": "How do I claim credit in India for tax I already paid abroad?"},
+  {"id": "crs-fatca", "question": "What are CRS and FATCA, and how do they affect my foreign accounts?"},
+  {"id": "foreign-shares", "question": "Can I keep my shares in a foreign company after I return, and what paperwork applies?"},
+  {"id": "send-money-abroad", "question": "Can I send money abroad after I return, and are there limits?"},
+  {"id": "mutual-funds", "question": "What changes for my mutual funds and investments in India when my status changes?"},
+  {"id": "retirement-account", "question": "What happens to my foreign retirement account, such as a 401(k), when I become a resident of India?"},
+  {"id": "tell-bank", "question": "Do I need to tell my Indian bank when I return, and how soon?"},
+  {"id": "records-days", "question": "What records should I keep to show my days in India and my residential status?"}
+]

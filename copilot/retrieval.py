@@ -27,6 +27,11 @@ def _get_store():
     return _store
 
 
+def warm_up() -> None:
+    """Open the index and load the embedding model now, not on the first question."""
+    _get_store()
+
+
 def retrieve(query: str, k: int = config.TOP_K) -> list[Chunk]:
     # With a cosine index LangChain converts distance to relevance (1 - distance),
     # so higher is better. Checked in scripts/score_report.py output.

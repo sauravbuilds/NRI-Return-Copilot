@@ -6,7 +6,8 @@ import config
 from copilot import llm, orchestrator
 from copilot.orchestrator import PipelineResult
 from copilot.retrieval import Chunk
-from copilot.schemas import (Answer, Citation, Finding, JudgeVerdict, MissingItem, Persona, VerdictResult)
+from copilot.schemas import (Answer, Citation, Finding, JudgeVerdict, MissingItem, NumberedVerdict, Persona,
+                             ThreadVerdicts)
 from evals import run_evals
 
 
@@ -38,8 +39,9 @@ def test_runner_full_mode_with_fake_pipeline_writes_all_metrics(tmp_path, monkey
 
     monkeypatch.setattr(llm, "llm_available", lambda: True)
     monkeypatch.setattr(orchestrator, "run_pipeline", fake_pipeline)
-    monkeypatch.setattr(llm, "structured_call", lambda schema, s, u: (
-        JudgeVerdict(label="supported", reason="r") if schema is JudgeVerdict else VerdictResult(label="agrees", reason="r")))
+    monkeypatch.setattr(llm, "structured_call", lambda schema, s, u, **k: (
+        JudgeVerdict(label="supported", reason="r") if schema is JudgeVerdict
+        else ThreadVerdicts(verdicts=[NumberedVerdict(number=1, label="agrees", reason="r")])))
     monkeypatch.setattr(config, "EVAL_SLEEP_SECONDS", 0)
     monkeypatch.setattr(run_evals, "page_text", lambda d, p: "official text")
     monkeypatch.setattr(config, "EVALS_DIR", tmp_path)

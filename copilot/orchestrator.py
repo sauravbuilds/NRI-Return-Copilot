@@ -4,24 +4,26 @@ LLM tool calling happens inside step 6 only; it is NOT an autonomous agent.
 Every step is its own small function so it can be tested alone.
 """
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 
 import config
 from copilot import llm
 from copilot.brief import build_brief
 from copilot.compare import compare_threads
-from copilot.persona import extract_persona, plan_queries
+from copilot.missing import complete_missing_information
+from copilot.persona import enrich_persona, extract_persona, plan_queries
 from copilot.prompts import ANSWER_ASSEMBLY, TOOL_CALLING_SYSTEM
 from copilot.retrieval import retrieve
-from copilot.schemas import (Answer, AnswerDraft, Citation, Finding, MissingItem, Persona,
-                             RoadmapStep)
+from copilot.schemas import (Answer, AnswerDraft, Citation, CommunityLink, Finding, MissingItem,
+                             Persona, RoadmapStep)
 from copilot.text import plain
 from copilot.tools import (days_in_india_calculator, fetch_community, scrub, search_community,
                            search_official_docs)
 from copilot.updates import compare_updates, fetch_official_updates, last_checked
 from copilot.web_queries import write_web_queries
-from guardrails.advice import classify_scope, scope_response
-from guardrails.escalation import escalation_reasons
+from guardrails.advice import classify_scope, escalation_links, scope_response
+from guardrails.escalation import US_SIDE_REASON, escalation_reasons
 from guardrails.grounding import check_grounding
 from guardrails.output_checks import run_output_checks
 from guardrails.pii import check_pii
@@ -152,7 +154,7 @@ def tool_calling_step(question: str, persona: Persona, trace: list, community: b
     tools = [search_official_docs, days_in_india_calculator] + ([search_community] if community else [])
     try:
         msg = llm.tool_call_step(TOOL_CALLING_SYSTEM,
-                                 f"Question: {question}\nContext: {persona.model_dump_json()}", tools)
+                                 f"Question: {question}\nContext: {persona.model_dump_json()}", tools, fast=True)
     except Exception as e:
         _record(trace, "tool_calling", f"skipped: {type(e).__name__}")
         msg = None
@@ -187,89 +189,152 @@ def _finish(answer: Answer, persona, reasons: list[str]) -> Answer:
     return answer
 
 
-def abstain(persona, chunks_note: str, trace) -> PipelineResult:
-    reasons = ["No official text supports an answer: " + chunks_note]
+def as_links(threads: list[dict]) -> list[CommunityLink]:
+    return [CommunityLink(url=t["url"], title=t["title"], snippet=t["snippet"], site=t.get("site", ""))
+            for t in threads]
+
+
+def community_links_for(question: str, persona: Persona, trace: list) -> list[CommunityLink]:
+    """Discussions worth reading when there is no official answer to compare them with."""
+    try:
+        threads = fetch_community(write_web_queries(question, persona).community)
+    except Exception as e:
+        _record(trace, "community_search", f"skipped: {type(e).__name__}")
+        return []
+    _record(trace, "community_search", f"{len(threads)} found")
+    return as_links(threads)
+
+
+def abstain(persona, user_reason: str, technical_note: str, trace, community_links=(), links=(),
+            us_side: bool = False) -> PipelineResult:
+    """Stop without an answer. `user_reason` is shown to the user and goes in the CA brief;
+    `technical_note` stays in the log and trace. Community discussions and official links for
+    the US side, when there are any, are still offered."""
+    _record(trace, "abstained", technical_note)
     ans = Answer(summary=("I couldn't find this in the official documents, so I'm not going to guess. "
                           "A chartered accountant is the best person to check this with."),
-                 abstained=True, confidence="low", confidence_reason=chunks_note)
-    ans = _finish(ans, persona, reasons)
-    return PipelineResult("abstained", ans.summary, ans, persona, trace=trace, model_used=llm.last_model_used)
+                 abstained=True, confidence="low", confidence_reason=user_reason,
+                 community_links=list(community_links))
+    ans = _finish(ans, persona, [user_reason] + ([US_SIDE_REASON] if us_side else []))
+    return PipelineResult("abstained", ans.summary, ans, persona, trace=trace, links=list(links),
+                          model_used=llm.last_model_used)
+
+
+def assemble_answer(persona: Persona, question: str, chunks, days, trace: list, us_side: bool = False):
+    """Have the model draft the answer, check it, and regenerate once if a check fails.
+    Returns (answer, problems); `problems` is empty when the answer passed every check."""
+    context = (f"Persona: {persona.model_dump_json()}\nQuestion: {question}\n"
+               f"Days per year computed by tool (information only): {days['days_per_year'] if days else 'none supplied'}\n"
+               f"US side: {'yes, this question also involves US tax or retirement rules' if us_side else 'no'}\n\n"
+               f"OFFICIAL SOURCES:\n{numbered_sources(chunks)}")
+    problems: list[str] = []
+    answer = None
+    for _ in range(1 + config.MAX_REGENERATIONS):
+        extra = ("\n\nYour previous answer failed these checks, fix them:\n- " + "\n- ".join(problems)) if problems else ""
+        draft = llm.structured_call(AnswerDraft, ANSWER_ASSEMBLY, context + extra)
+        answer, build_problems = build_answer(draft, chunks)
+        answer.missing_information = complete_missing_information(persona, answer.missing_information)
+        problems = build_problems + run_output_checks(persona, answer, chunks)
+        _record(trace, "output_checks", "passed" if not problems else "failed: " + "; ".join(p[:60] for p in problems[:3]))
+        if not problems:
+            break
+    return answer, problems
+
+
+def _say(on_step, message: str) -> None:
+    """Tell the caller which stage is running, in words fit for the user."""
+    if on_step:
+        on_step(message)
 
 
 # --- the pipeline -------------------------------------------------------------
-def run_pipeline(question: str, persona: Persona | None = None, community: bool = True) -> PipelineResult:
+def run_pipeline(question: str, persona: Persona | None = None, community: bool = True,
+                 on_step=None, check_updates: bool = True) -> PipelineResult:
     trace: list = []
 
     # 1. PII guard: nothing reaches a model before this passes.
-    typed = question + " " + (persona.concerns if persona else "")
+    typed = " ".join([question, persona.concerns, persona.other_context] if persona else [question])
     pii = check_pii(typed)
     _record(trace, "pii_guard", "blocked" if pii.blocked else "passed")
     if pii.blocked:
         return PipelineResult("pii_blocked", pii.message, trace=trace)
 
-    # 2. Scope guard
-    scope = classify_scope(question)
+    # 2 + 3. Scope guard, and the profile when the question came as free text. The two only
+    #        need the question, so they run side by side.
+    _say(on_step, "Understanding your question")
+    if persona is None:
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            profile_future = pool.submit(extract_persona, question)
+            scope = classify_scope(question)
+        persona = profile_future.result()
+    else:
+        scope = classify_scope(question)
+        persona = enrich_persona(persona)
     _record(trace, "scope_guard", scope.label)
     resp = scope_response(scope.label)
     if resp["action"] == "refuse":
         return PipelineResult("refused", resp["message"], trace=trace, model_used=llm.last_model_used)
     if resp["action"] == "escalate_us_tax":
-        p = persona or Persona()
-        ans = Answer(summary=resp["message"], confidence="low", confidence_reason="US-side question: not answered")
-        ans = _finish(ans, p, escalation_reasons(p, scope_label="us_side_tax", confidence="low"))
-        return PipelineResult("us_side_tax", resp["message"], ans, p, trace=trace, links=resp["links"],
+        # Only about US tax: nothing to answer from Indian documents, but the official US
+        # sources and community discussions are still offered.
+        ans = Answer(summary=resp["message"], confidence="low", confidence_reason="Only a US-side question.")
+        if community:
+            _say(on_step, "Looking for community discussions")
+            ans.community_links = community_links_for(question, persona, trace)
+        ans = _finish(ans, persona, escalation_reasons(persona, scope_label="us_side_tax", confidence="low"))
+        return PipelineResult("us_side_tax", resp["message"], ans, persona, trace=trace, links=resp["links"],
                               model_used=llm.last_model_used)
 
-    # 3. Persona
-    persona = persona or extract_persona(question)
+    # A question with a US side is still answered for the Indian side; the US part is flagged.
+    us_side = scope.has_us_side
+    us_links = escalation_links() if us_side else []
+
+    # 4. Search the official documents. The grounding check decides whether to answer at all.
     _record(trace, "persona", "ready")
+    _say(on_step, "Searching the official documents")
     queries = plan_queries(persona, question)
     _record(trace, "queries", f"{len(queries)} planned")
     chunks = retrieve_merged(queries)
     grounding = grounding_for(question)
     _record(trace, "grounding_guard", "passed" if grounding.passed else "abstain")
     if not grounding.passed:
-        return abstain(persona, grounding.reason, trace)
+        links = community_links_for(question, persona, trace) if community else []
+        return abstain(persona, "The official documents I have don't cover this question.", grounding.reason,
+                       trace, community_links=links, links=us_links, us_side=us_side)
 
     # 5. Anything newer than our last document check? Searches use queries written from
     #    what the user meant, in the words each kind of site would use.
+    _say(on_step, "Checking community discussions and recent circulars")
     web = write_web_queries(question, persona)
     _record(trace, "web_queries", scrub(f"community: {web.community} | official: {web.official}"))
-    newer = find_newer_publications(web.official, trace)
+    newer = find_newer_publications(web.official, trace) if check_updates else []
 
     # 6. Tool calling (days calculator, community search)
     days, threads, extra = tool_calling_step(question, persona, trace, community, web.community)
     chunks = merge_chunks(chunks, extra)
 
-    # 7. Compare community and newer publications with the official passages
-    community_findings = compare_threads(threads, chunks)
-    updates = [u for u in compare_updates(newer, chunks) if u.verdict != "unrelated"]
+    # 7 + 8 + 9. The answer is written from the official passages alone, so comparing the
+    #            community threads and newer publications runs alongside it, not before it.
+    _say(on_step, "Writing your answer")
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        threads_future = pool.submit(compare_threads, threads, chunks)
+        updates_future = pool.submit(compare_updates, newer, chunks)
+        answer, problems = assemble_answer(persona, question, chunks, days, trace, us_side)
+    if problems:
+        return abstain(persona, "I couldn't put together a reliable, fully sourced answer this time.",
+                       "the answer failed its checks twice", trace, community_links=as_links(threads),
+                       links=us_links, us_side=us_side)
+    community_findings = threads_future.result()
+    updates = [u for u in updates_future.result() if u.verdict != "unrelated"]
     if newer:
         _record(trace, "official_updates_compared", f"{len(updates)} of {len(newer)} relevant")
-
-    # 8 + 9. Assemble, check, regenerate once, then abstain
-    context = (f"Persona: {persona.model_dump_json()}\nQuestion: {question}\n"
-               f"Days per year computed by tool (information only): {days['days_per_year'] if days else 'none supplied'}\n\n"
-               f"OFFICIAL SOURCES:\n{numbered_sources(chunks)}")
-    problems: list[str] = []
-    answer = None
-    for attempt in range(1 + config.MAX_REGENERATIONS):
-        extra = ("\n\nYour previous answer failed these checks, fix them:\n- " + "\n- ".join(problems)) if problems else ""
-        draft = llm.structured_call(AnswerDraft, ANSWER_ASSEMBLY, context + extra)
-        answer, build_problems = build_answer(draft, chunks)
-        problems = build_problems + run_output_checks(persona, answer, chunks)
-        _record(trace, "output_checks", "passed" if not problems else f"failed ({len(problems)})")
-        if not problems:
-            break
-    if problems:
-        return abstain(persona, "the answer failed its safety checks twice", trace)
 
     # 10. Escalation and CA brief
     answer.community_findings = community_findings
     answer.official_updates = updates
-    reasons = escalation_reasons(persona, "in_scope", answer.confidence, community_findings)
+    reasons = escalation_reasons(persona, "in_scope", answer.confidence, community_findings, has_us_side=us_side)
     if any(u.verdict == "changes" for u in updates):
         reasons.append("A newer official publication may change this answer, so check it before acting")
     answer = _finish(answer, persona, reasons)
-    return PipelineResult("answered", answer.summary, answer, persona, chunks, trace,
+    return PipelineResult("answered", answer.summary, answer, persona, chunks, trace, links=us_links,
                           model_used=llm.last_model_used)

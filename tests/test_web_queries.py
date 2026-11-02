@@ -8,7 +8,7 @@ GUIDED = Persona(indian_accounts=["NRO"], foreign_assets=["foreign_retirement_ac
 
 def plan(community="moved back from canada what to do with my old account",
          official="NRO account re-designation resident rupee account returning NRI RBI"):
-    return lambda schema, system, user: SearchPlan(community_query=community, official_query=official)
+    return lambda schema, system, user, **k: SearchPlan(community_query=community, official_query=official)
 
 
 def test_each_query_uses_the_words_of_its_own_kind_of_site(monkeypatch):
@@ -19,7 +19,7 @@ def test_each_query_uses_the_words_of_its_own_kind_of_site(monkeypatch):
 
 def test_the_question_and_context_both_reach_the_model(monkeypatch):
     seen = {}
-    monkeypatch.setattr(llm, "structured_call", lambda s, sys, user: seen.update(user=user) or SearchPlan(
+    monkeypatch.setattr(llm, "structured_call", lambda s, sys, user, **k: seen.update(user=user) or SearchPlan(
         community_query="a", official_query="b"))
     write_web_queries("what about my account?", GUIDED)
     assert "what about my account?" in seen["user"] and "NRO" in seen["user"]

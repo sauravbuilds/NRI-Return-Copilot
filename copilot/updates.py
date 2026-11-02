@@ -12,7 +12,7 @@ import config
 from copilot import llm
 from copilot.compare import format_passages
 from copilot.prompts import UPDATE_COMPARISON
-from copilot.schemas import OfficialUpdate, UpdateVerdictResult
+from copilot.schemas import OfficialUpdate, UpdateVerdicts
 from copilot.text import plain
 from copilot.tools import scrub, site_of
 
@@ -56,18 +56,26 @@ def fetch_official_updates(query: str, since: date, client=None, manifest_path=N
             for r in results if r.get("url") and r["url"] not in known][:max_results]
 
 
+UNCHECKED_REASON = "I couldn't compare this one with the documents, so give it a quick read yourself."
+
+
 def compare_updates(updates: list[dict], chunks) -> list[OfficialUpdate]:
-    """What each newer publication means for the passages in use. A failed comparison is
-    kept as 'unchecked' so a newer circular is never silently dropped."""
+    """What each newer publication means for the passages in use, judged in one model call.
+    A failed or missing comparison is kept as 'unchecked' so a newer circular is never
+    silently dropped."""
+    if not updates:
+        return []
+    numbered = "\n\n".join(f"[{i}] {u['title']}\n{u['snippet']}" for i, u in enumerate(updates, start=1))
+    user = f"OUR PASSAGES:\n{format_passages(chunks)}\n\nNEWER PUBLICATIONS:\n{numbered}"
+    try:
+        found = llm.structured_call(UpdateVerdicts, UPDATE_COMPARISON, user, fast=True).verdicts
+    except Exception:
+        found = []
+    by_number = {v.number: v for v in found}
     out = []
-    for u in updates:
-        user = (f"OUR PASSAGES:\n{format_passages(chunks)}\n\n"
-                f"NEWER PUBLICATION:\n{u['title']}\n{u['snippet']}")
-        try:
-            v = llm.structured_call(UpdateVerdictResult, UPDATE_COMPARISON, user)
-            verdict, reason = v.label, plain(v.reason)
-        except Exception:
-            verdict, reason = "unchecked", "I couldn't compare this one with the documents, so give it a quick read yourself."
-        out.append(OfficialUpdate(url=u["url"], title=u["title"], snippet=u["snippet"],
-                                  date=u["date"], verdict=verdict, reason=reason))
+    for i, u in enumerate(updates, start=1):
+        v = by_number.get(i)
+        out.append(OfficialUpdate(url=u["url"], title=u["title"], snippet=u["snippet"], date=u["date"],
+                                  verdict=v.label if v else "unchecked",
+                                  reason=plain(v.reason) if v else UNCHECKED_REASON))
     return out

@@ -14,7 +14,8 @@ DISCLAIMER = (
 RelocationStatus = Literal["planning", "relocated_recently", "relocated_over_a_year_ago", "undecided"]
 IndianAccount = Literal["NRE", "NRO", "resident_savings", "none"]
 ForeignAsset = Literal["us_stocks", "vested_rsus_esops", "mutual_funds",
-                       "foreign_retirement_account", "property", "none"]
+                       "foreign_retirement_account", "foreign_bank_account", "property", "none"]
+Citizenship = Literal["indian_citizen", "oci", "pio", "other"]
 Goal = Literal["move_assets_to_india", "keep_abroad", "understand_reporting"]
 Verdict = Literal["agrees", "contradicts", "unrelated"]
 Confidence = Literal["low", "medium", "high"]
@@ -30,12 +31,14 @@ class Persona(BaseModel):
     """Context only. No names, numbers or documents. Unknown stays empty."""
     relocation_status: Optional[RelocationStatus] = None
     move_date: Optional[date] = None
+    citizenship: Optional[Citizenship] = None
     countries_lived: list[str] = []
     days_in_india_by_year: list[DaysInIndia] = []
     indian_accounts: list[IndianAccount] = []
     foreign_assets: list[ForeignAsset] = []
     goals: list[Goal] = []
     concerns: str = ""
+    other_context: str = ""  # anything the answer options did not cover, in the user's words
 
 
 class Citation(BaseModel):
@@ -81,6 +84,14 @@ class CommunityFinding(BaseModel):
     reason: str
 
 
+class CommunityLink(BaseModel):
+    """A public discussion worth reading, shown when there is no official answer to compare it with."""
+    url: str
+    title: str
+    snippet: str = ""
+    site: str = ""
+
+
 class OfficialUpdate(BaseModel):
     """An official publication newer than the documents the answer is based on.
     'unchecked' means the comparison could not run."""
@@ -104,6 +115,7 @@ class Answer(BaseModel):
     roadmap: list[RoadmapStep] = []
     missing_information: list[MissingItem] = []
     community_findings: list[CommunityFinding] = []
+    community_links: list[CommunityLink] = []
     official_updates: list[OfficialUpdate] = []
     confidence: Confidence = "low"
     confidence_reason: str = ""
@@ -118,6 +130,8 @@ class Answer(BaseModel):
 class ScopeResult(BaseModel):
     label: Literal["in_scope", "investment_advice", "us_side_tax", "out_of_scope"]
     reason: str = ""
+    # True when a full answer would also need US tax, US retirement-account or US brokerage rules.
+    has_us_side: bool = False
 
 
 class VerdictResult(BaseModel):
@@ -130,9 +144,26 @@ class SearchPlan(BaseModel):
     official_query: str
 
 
-class UpdateVerdictResult(BaseModel):
+class NumberedVerdict(BaseModel):
+    """The verdict for one numbered community snippet."""
+    number: int
+    label: Verdict
+    reason: str
+
+
+class ThreadVerdicts(BaseModel):
+    verdicts: list[NumberedVerdict]
+
+
+class NumberedUpdateVerdict(BaseModel):
+    """The verdict for one numbered newer publication."""
+    number: int
     label: Literal["agrees", "changes", "unrelated"]
     reason: str
+
+
+class UpdateVerdicts(BaseModel):
+    verdicts: list[NumberedUpdateVerdict]
 
 
 class DraftFinding(BaseModel):

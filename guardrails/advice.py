@@ -18,12 +18,13 @@ REFUSAL_ADVICE = ("I can't tell you what to buy, sell or invest in. What I can d
                   "and paperwork apply, like what you'd need to do to move shares to India. Want to ask "
                   "it that way? " + CAPABILITIES)
 REFUSAL_OUT_OF_SCOPE = "That one's outside what I can help with. " + CAPABILITIES
-US_TAX_MESSAGE = ("That's a US tax question, so I'm not going to answer it. The official source is linked "
-                  "below, and a qualified US tax professional is the right person to ask.")
+US_TAX_MESSAGE = ("That one is about US tax, so I can't answer it. The official sources are linked below, "
+                  "and a qualified US tax professional is the right person to ask. Community "
+                  "discussions that may help are listed too.")
 
 
 def classify_scope(question: str) -> ScopeResult:
-    return llm.structured_call(ScopeResult, SCOPE_CLASSIFIER, question)
+    return llm.structured_call(ScopeResult, SCOPE_CLASSIFIER, question, fast=True)
 
 
 def escalation_links(path=None) -> list[dict]:

@@ -14,12 +14,14 @@ NRI Return Copilot builds a profile from a short intake, searches the official d
 
 ## Features
 
-- **Two ways in.** A guided intake of eight questions, or a free-text question.
+- **Two ways in.** A guided intake of nine questions, or a free-text question. Every multiple-choice question has a box for anything the options do not cover, and what is written there is interpreted and used.
+- **Common questions.** A sidebar lists questions many returning NRIs ask. Each has an answer prepared from the official documents, so it opens at once and uses no model calls. The community discussions beside it are searched live, once a day per question. Prepared answers are ignored automatically once any document changes.
 - **Cited roadmap.** Each step shows the document, its release date (where known) and the page, with links to that page and the full document.
 - **Newer circulars.** A search of the RBI and Income Tax sites flags publications dated after the last document update.
 - **Community tier.** Linked Reddit, X and Quora threads, each labelled as agreeing with, contradicting or unrelated to the official text.
 - **Gaps listed.** Facts that could not be determined are listed, with how each would change the answer.
-- **Abstention and escalation.** When the documents do not support an answer, the assistant says so and refers the user to a chartered accountant (CA). Complex cases produce a downloadable CA brief that contains no personal details.
+- **Abstention and escalation.** When the documents do not support an answer, the assistant says so, refers the user to a chartered accountant (CA) and lists community discussions to read. Complex cases produce a downloadable CA brief that contains no personal details.
+- **India side first.** A question with a foreign-country side, such as moving a US 401(k) to India, is answered for what the Indian documents cover. The foreign part is flagged for a local tax professional, with official links.
 
 ## How it works
 
@@ -44,7 +46,7 @@ flowchart TD
 ```
 
 1. **PII guard.** Pattern matching blocks phone numbers, PAN, Aadhaar-style numbers, emails, card numbers and account-like numbers before any model call.
-2. **Scope guard.** Investment advice and off-topic requests are declined. US tax questions are answered with official links only.
+2. **Scope guard.** Investment advice and off-topic requests are declined. Questions about US tax alone get official links and community discussions. Mixed questions continue with the US part flagged.
 3. **Profile.** Built from the form or extracted from free text. Fields that are not stated stay empty.
 4. **Document search.** ChromaDB finds passages. If the user's question has no good match, the assistant abstains.
 5. **Web search.** Tavily finds community threads, and newer publications on the RBI and Income Tax sites.
@@ -98,9 +100,10 @@ Settings are read from environment variables, loaded from `.env` locally.
 | `GROQ_API_KEY`, `GEMINI_API_KEY`, `OPENROUTER_API_KEY`, `CEREBRAS_API_KEY`, `MISTRAL_API_KEY` | At least one | Language model providers |
 | `TAVILY_API_KEY` | Optional | Community search and the newer-publication check |
 | `LLM_PROVIDER_ORDER` | Optional | Provider order, default `groq,gemini,cerebras,openrouter,mistral` |
-| `GROQ_MODEL`, `GEMINI_MODEL`, `OPENROUTER_MODEL`, ... | Optional | Override a provider's default model |
+| `GROQ_MODEL`, `GEMINI_MODEL`, `OPENROUTER_MODEL`, ... | Optional | Override a provider's main model |
+| `GROQ_FAST_MODEL`, `GEMINI_FAST_MODEL` | Optional | Override a provider's faster model for the small steps |
 
-Providers are tried in order. A provider without a key is skipped, and a rate-limited or failing provider hands over to the next. `python scripts/check_llm.py` tests each configured provider for plain replies, structured output and tool calling.
+Providers are tried in order. A provider without a key is skipped, and a rate-limited or failing provider hands over to the next. Each provider has a main model for writing the answer and a faster one for the small steps, with separate daily quotas on most free tiers. Either one covers for the other when its quota runs out. `python scripts/check_llm.py` tests each configured provider for plain replies, structured output and tool calling.
 
 Keys come from [Groq](https://console.groq.com/keys), [Google AI Studio](https://aistudio.google.com/apikey), [OpenRouter](https://openrouter.ai/keys), [Cerebras](https://cloud.cerebras.ai), [Mistral](https://console.mistral.ai) and [Tavily](https://app.tavily.com).
 
@@ -112,12 +115,12 @@ streamlit run app.py
 
 ## Usage
 
+- **Common questions:** select one in the sidebar for an immediate answer.
 - **Guided:** answer the questions one at a time, then select "Get my roadmap".
 - **Ask directly:** type a question, for example "What happens to my NRO account when I return to India for good?"
 - **Community threads:** can be switched off with the checkbox above the question.
 
-Results have four parts: the roadmap, what could not be determined, community experience, and the CA brief. A "How this answer was produced" panel lists the checks and searches that ran.
-
+Results have four parts: the roadmap, what could not be determined, community experience, and the CA brief.
 ## Deployment
 
 The app runs on Streamlit Community Cloud and Hugging Face Spaces. Connect the repository, use `app.py` as the entry point and add the variables from the Configuration table as secrets. The search index is built automatically on first start.
@@ -125,7 +128,7 @@ The app runs on Streamlit Community Cloud and Hugging Face Spaces. Connect the r
 ## Security and privacy
 
 - Personal identifiers are blocked before any model call, and user input is not stored.
-- Logs and the run trace record step names and outcomes, never the text as typed.
+- Logs record step names and outcomes, never the text as typed.
 - Community results keep only a link, title, snippet, date and site, with usernames and identifiers removed.
 
 ## Project structure
@@ -135,7 +138,7 @@ app.py          Streamlit app
 config.py       settings and thresholds
 copilot/        pipeline, retrieval, tools, prompts, model calls
 guardrails/     PII, scope, grounding, escalation, output checks
-scripts/        ingest, refresh, check_llm, score_report
+scripts/        ingest, refresh, prepare_answers, check_llm, score_report
 analytics/      community thread collection, tagging and charts
 evals/          golden set, runner, tuning
 data/official/  source PDFs and manifest.csv
@@ -155,6 +158,8 @@ The evaluation reports retrieval hit rate, unsupported-claim rate, refusal accur
 ## Keeping documents current
 
 `python scripts/refresh.py` re-downloads every document in `data/official/manifest.csv`, compares SHA-256 hashes, archives changed files and rebuilds the index. A failed download never removes the existing file. A GitHub Action runs the refresh every three days.
+
+`python scripts/prepare_answers.py` prepares the answers for the common questions in `data/common_questions.json` using the normal pipeline. Run it again after a refresh.
 
 Downloads use a Scrapy crawler (`scripts/crawler.py`) that identifies itself as `NRIReturnCopilot-refresh`, obeys `robots.txt`, makes one request at a time per site with a delay, and retries transient errors. Only responses that are PDFs are accepted.
 

@@ -1,6 +1,8 @@
 """Human-review escalation rules as small pure functions."""
 import config
 
+US_SIDE_REASON = "The US side of this needs a US tax professional"
+
 
 def is_us_side_tax(scope_label: str) -> bool:
     return scope_label == "us_side_tax"
@@ -20,14 +22,14 @@ def community_contradicts(community_findings) -> bool:
 
 
 def escalation_reasons(persona, scope_label="in_scope", confidence="high",
-                       community_findings=()) -> list[str]:
+                       community_findings=(), has_us_side=False) -> list[str]:
     reasons = []
-    if is_us_side_tax(scope_label):
-        reasons.append("US-side tax question: needs a US tax professional")
+    if is_us_side_tax(scope_label) or has_us_side:
+        reasons.append(US_SIDE_REASON)
     if has_complex_assets(persona):
         reasons.append("Complex situation: several types of foreign assets")
     if is_low_confidence(confidence):
-        reasons.append("Low confidence in the answer")
+        reasons.append("The official documents only partly cover this question")
     if community_contradicts(community_findings):
         reasons.append("A community thread contradicts the official source")
     return reasons

@@ -1,11 +1,13 @@
 """Pipeline tests with a fake LLM (no keys, no network)."""
 import pytest
 
+import config
 from copilot import llm, orchestrator as orch
 from copilot.persona import persona_from_intake, plan_queries
 from copilot.retrieval import Chunk
-from copilot.schemas import (AnswerDraft, DraftFinding, DraftStep, MissingItem, Persona, ScopeResult,
-                             SearchPlan, UpdateVerdictResult, VerdictResult)
+from copilot.schemas import (AnswerDraft, DraftFinding, DraftStep, MissingItem, NumberedUpdateVerdict,
+                             NumberedVerdict, Persona, ScopeResult, SearchPlan, ThreadVerdicts,
+                             UpdateVerdicts)
 from copilot.tools import fetch_community
 from guardrails import advice
 
@@ -18,23 +20,26 @@ ALL_MISSING = [MissingItem(field=f, why_it_matters="w", if_this_then_that="if x 
 
 class Fake:
     """Replaces llm.structured_call / tool_call_step. Counts calls."""
-    def __init__(self, scope="in_scope", draft=None, verdict="agrees", update_verdict="changes"):
-        self.scope, self.verdict, self.update_verdict, self.calls = scope, verdict, update_verdict, 0
+    def __init__(self, scope="in_scope", draft=None, verdict="agrees", update_verdict="changes", us_side=False):
+        self.scope, self.verdict, self.update_verdict, self.us_side, self.calls = (
+            scope, verdict, update_verdict, us_side, 0)
         self.draft = draft or AnswerDraft(
             summary="Info.", findings=[DraftFinding(statement="s", source_ids=[1])],
             roadmap=[DraftStep(stage="first_30_days", step="do x", source_ids=[1])],
             missing_information=ALL_MISSING, confidence="high")
 
-    def structured(self, schema, system, user):
+    def structured(self, schema, system, user, **kwargs):
         self.calls += 1
         if schema is ScopeResult:
-            return ScopeResult(label=self.scope)
+            return ScopeResult(label=self.scope, has_us_side=self.us_side)
         if schema is AnswerDraft:
             return self.draft
-        if schema is VerdictResult:
-            return VerdictResult(label=self.verdict, reason="r")
-        if schema is UpdateVerdictResult:
-            return UpdateVerdictResult(label=self.update_verdict, reason="newer rule")
+        if schema is ThreadVerdicts:
+            return ThreadVerdicts(verdicts=[NumberedVerdict(number=i, label=self.verdict, reason="r")
+                                            for i in range(1, 6)])
+        if schema is UpdateVerdicts:
+            return UpdateVerdicts(verdicts=[NumberedUpdateVerdict(number=i, label=self.update_verdict,
+                                                                  reason="newer rule") for i in range(1, 6)])
         if schema is SearchPlan:
             return SearchPlan(community_query="moved back what to do with old bank account",
                               official_query="NRO account re-designation returning NRI circular")
@@ -42,7 +47,7 @@ class Fake:
             return Persona()
         raise AssertionError(schema)
 
-    def tools(self, system, user, tools):
+    def tools(self, system, user, tools, **kwargs):
         self.calls += 1
         class Msg:
             tool_calls = [{"name": "search_community", "args": {"query": "nro u/someone"}},
@@ -85,6 +90,68 @@ def test_us_tax_escalates_with_irs_link_and_no_answer(fake):
     r = orch.run_pipeline("Will the IRS tax my 401(k)?")
     assert r.kind == "us_side_tax" and r.answer.needs_human_review and r.answer.ca_brief
     assert any("irs.gov" in l["url"] for l in r.links)
+
+
+def test_a_question_with_a_us_side_is_still_answered_for_the_indian_side(fake):
+    fake.us_side = True
+    r = orch.run_pipeline("How do I move my 401(k) to India?")
+    assert r.kind == "answered" and r.answer.roadmap
+    assert any("US side" in x for x in r.answer.review_reasons) and r.answer.ca_brief
+    assert any("irs.gov" in l["url"] for l in r.links)  # where to look for the US part
+
+
+def test_the_model_is_told_when_there_is_a_us_side(fake, monkeypatch):
+    fake.us_side = True
+    prompts, original = [], fake.structured
+    monkeypatch.setattr(llm, "structured_call", lambda schema, s, u, **k: prompts.append(u) or original(schema, s, u))
+    orch.run_pipeline("How do I move my 401(k) to India?")
+    assert any("US side: yes" in u for u in prompts) and not any("US side: no" in u for u in prompts)
+
+
+def test_without_a_us_side_nothing_about_the_us_is_shown(fake):
+    r = orch.run_pipeline("What happens to my NRO account?")
+    assert r.links == [] and not any("US side" in x for x in r.answer.review_reasons)
+
+
+def test_a_purely_us_question_still_offers_community_discussions(fake):
+    fake.scope = "us_side_tax"
+    r = orch.run_pipeline("Will the IRS tax my 401(k)?")
+    assert r.kind == "us_side_tax" and r.answer.community_links and r.links
+    assert r.answer.community_links[0].url == "http://f.com/1"
+
+
+def test_community_discussions_for_a_us_question_can_be_switched_off(fake, monkeypatch):
+    fake.scope = "us_side_tax"
+    monkeypatch.setattr(orch, "fetch_community", lambda q: (_ for _ in ()).throw(AssertionError("searched")))
+    r = orch.run_pipeline("Will the IRS tax my 401(k)?", community=False)
+    assert r.answer.community_links == [] and r.links
+
+
+def test_when_the_documents_do_not_cover_it_community_discussions_are_still_offered(fake, monkeypatch):
+    monkeypatch.setattr(orch, "retrieve", lambda q, k=5: [Chunk("x", dict(META), 0.01)])
+    r = orch.run_pipeline("How do I transfer my 401(k) to India?")
+    assert r.kind == "abstained" and r.answer.community_links
+    assert any(s == "community_search" for s, _ in r.trace)
+
+
+def test_an_abstention_with_a_us_side_also_points_to_the_official_us_sources(fake, monkeypatch):
+    fake.us_side = True
+    monkeypatch.setattr(orch, "retrieve", lambda q, k=5: [Chunk("x", dict(META), 0.01)])
+    r = orch.run_pipeline("How do I transfer my 401(k) to India?")
+    assert r.kind == "abstained" and any("irs.gov" in l["url"] for l in r.links)
+    assert any("US side" in x for x in r.answer.review_reasons)
+
+
+def test_a_failed_community_search_never_blocks_an_abstention(fake, monkeypatch):
+    monkeypatch.setattr(orch, "retrieve", lambda q, k=5: [Chunk("x", dict(META), 0.01)])
+    monkeypatch.setattr(orch, "fetch_community", lambda q: (_ for _ in ()).throw(RuntimeError("down")))
+    r = orch.run_pipeline("What is stamp duty in Mumbai?")
+    assert r.kind == "abstained" and r.answer.community_links == []
+
+
+def test_newer_publications_can_be_left_out_of_a_run(fake, monkeypatch):
+    monkeypatch.setattr(orch, "fetch_official_updates", lambda q, since: (_ for _ in ()).throw(AssertionError("searched")))
+    assert orch.run_pipeline("What happens to my NRO account?", check_updates=False).kind == "answered"
 
 
 def test_abstains_when_nothing_relevant(fake, monkeypatch):
@@ -177,10 +244,11 @@ def test_invented_source_number_triggers_regeneration_then_abstain(fake):
     assert sum(1 for s, _ in r.trace if s == "output_checks") == 2  # tried once, regenerated once
 
 
-def test_empty_persona_fields_must_be_listed_else_abstain(fake):
+def test_facts_the_model_forgot_to_list_are_added_by_code_not_failed(fake):
     fake.draft.missing_information = []
     r = orch.run_pipeline("What happens to my NRO account?")
-    assert r.kind == "abstained"
+    assert r.kind == "answered"
+    assert {m.field for m in r.answer.missing_information} == set(config.REQUIRED_PERSONA_FIELDS)
 
 
 # --- persona + query planning --------------------------------------------------
@@ -241,6 +309,38 @@ def test_community_opt_out_skips_community_search(fake, monkeypatch):
     monkeypatch.setattr(orch, "fetch_community", lambda q: (_ for _ in ()).throw(AssertionError("searched")))
     r = orch.run_pipeline("What happens to my NRO account?", community=False)
     assert r.kind == "answered" and r.answer.community_findings == []
+
+
+def test_all_threads_are_compared_in_one_model_call(fake, monkeypatch):
+    monkeypatch.setattr(orch, "fetch_community", lambda q: [
+        {"url": f"http://f.com/{i}", "title": "t", "snippet": "s", "date": "", "site": "f.com"} for i in range(4)])
+    schemas, original = [], fake.structured
+    monkeypatch.setattr(llm, "structured_call", lambda schema, s, u, **k: schemas.append(schema) or original(schema, s, u))
+    r = orch.run_pipeline("What happens to my NRO account?")
+    assert schemas.count(ThreadVerdicts) == 1 and len(r.answer.community_findings) == 4
+
+
+def test_abstention_reasons_shown_to_users_carry_no_internal_detail(fake, monkeypatch):
+    import re
+    monkeypatch.setattr(orch, "retrieve", lambda q, k=5: [Chunk("x", dict(META), 0.01)])
+    r = orch.run_pipeline("What is stamp duty in Mumbai?")
+    shown = " ".join(r.answer.review_reasons) + r.answer.confidence_reason + r.message
+    assert not re.search(r"threshold|relevance|score|safety", shown, re.I)
+    assert any(step == "abstained" and "threshold" in detail for step, detail in r.trace)  # kept for the log
+
+
+def test_a_draft_that_keeps_failing_is_reported_plainly_not_with_internals(fake):
+    fake.draft = AnswerDraft(summary="x", findings=[DraftFinding(statement="s", source_ids=[99])],
+                             missing_information=ALL_MISSING, confidence="high")
+    r = orch.run_pipeline("What happens to my NRO account?")
+    assert r.answer.review_reasons == ["I couldn't put together a reliable, fully sourced answer this time."]
+
+
+def test_progress_is_reported_in_plain_language(fake):
+    steps = []
+    orch.run_pipeline("What happens to my NRO account?", on_step=steps.append)
+    assert steps == ["Understanding your question", "Searching the official documents",
+                     "Checking community discussions and recent circulars", "Writing your answer"]
 
 
 def test_web_searches_use_the_written_queries_not_the_raw_question(fake, monkeypatch):
